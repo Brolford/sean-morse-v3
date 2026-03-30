@@ -71,7 +71,7 @@ const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.c
     gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding: 0 var(--space-5);
+    padding: 0 var(--space-3);
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE/Edge */
   }
@@ -82,8 +82,8 @@ const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.c
 
   /* ── Individual card ── */
   .featured-card {
-    flex: 0 0 min(320px, 40vw);
-    height: 420px;
+    flex: 0 0 min(420px, 75vw);
+    height: 520px;
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
@@ -164,7 +164,7 @@ const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.c
   /* ── Mobile: cards fill viewport width ── */
   @media (max-width: 640px) {
     .featured-card {
-      flex: 0 0 85vw;
+      flex: 0 0 88vw;
     }
   }
 
