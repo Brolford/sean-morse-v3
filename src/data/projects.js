@@ -46,6 +46,7 @@ export const projects = [
     tagline: 'Hydration Multiplier.',
     descriptor: 'Hydration Multiplier.',
     description: 'Comprehensive brand and packaging redesign for the category-defining hydration brand, acquired by Unilever for over $500M.',
+    image: 'https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/1741715300295-R0RYKNJX4UO0WNEQNK2D/10032.jpg?format=1500w',
     gradientClass: 'gradient-liquid-iv',
     stickerNumber: '+550',
     stickerLabel: 'locations launched',
