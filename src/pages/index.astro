@@ -1,17 +1,44 @@
 ---
-
+/**
+ * index.astro — Homepage for Sean Morse portfolio v3.
+ * Assembles all section components in presentation order.
+ */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import HeroSection from '../components/HeroSection.astro';
+import FeaturedScroll from '../components/FeaturedScroll.astro';
+import BentoGrid from '../components/BentoGrid.astro';
+import Accolade from '../components/Accolade.astro';
+import BrandsGrid from '../components/BrandsGrid.astro';
+import CTASection from '../components/CTASection.astro';
+import ContactPanel from '../components/ContactPanel.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base
+  title="Sean Morse — Strategic Design"
+  description="Strategic packaging and brand identity for CPG brands. 10+ years. $320M+ in influenced revenue."
+>
+  <Nav />
+
+  <main id="main">
+    <HeroSection />
+    <FeaturedScroll />
+    <BentoGrid />
+    <Accolade
+      stat="$320M+"
+      countTo={320}
+      prefix="$"
+      suffix="M+"
+      label="Revenue Influenced"
+      description="Across 15+ CPG brands including Liquid I.V. (acquired by Unilever), V8, and Campbell's flagship product lines."
+    />
+    <BrandsGrid />
+    <CTASection />
+  </main>
+
+  <!-- Fixed overlay panel — outside main content flow -->
+  <ContactPanel />
+
+  <Footer />
+</Base>

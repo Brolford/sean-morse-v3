@@ -4,9 +4,7 @@
    Stack: Astro 5.x + Tailwind + Vanilla JS
    ========================================================================== */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 /* ==========================================================================
    1. CSS Custom Properties

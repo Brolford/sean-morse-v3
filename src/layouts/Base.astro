@@ -7,7 +7,7 @@
  *   description — Meta description + OG description
  *   ogImage     — OG/Twitter image path or full URL (default: /images/og-image.jpg)
  */
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 const {
   title = 'Sean Morse — Design Director',
@@ -55,7 +55,7 @@ const canonicalUrl = siteBase + Astro.url.pathname;
   </style>
 
   <!-- View Transitions for smooth page navigation -->
-  <ViewTransitions />
+  <ClientRouter />
 </head>
 <body>
   <!-- Accessibility: skip-to-content link for keyboard users -->
