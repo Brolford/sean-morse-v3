@@ -41,6 +41,10 @@ const canonicalUrl = siteBase + Astro.url.pathname;
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={absoluteOgImage} />
 
+  <!-- Preconnect to image CDN — all project images load from Squarespace -->
+  <link rel="preconnect" href="https://images.squarespace-cdn.com" />
+  <link rel="dns-prefetch" href="https://images.squarespace-cdn.com" />
+
   <!-- Google Fonts: Instrument Serif (display) + Space Grotesk (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

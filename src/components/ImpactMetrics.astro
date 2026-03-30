@@ -1,0 +1,193 @@
+---
+/**
+ * ImpactMetrics.astro
+ * 4-metric grid with custom SVG icons for Sean's key accomplishments.
+ * Bronze/gold editorial aesthetic. Count-up animation on scroll.
+ * Replaces the single Accolade interstitial with a richer format.
+ *
+ * Metrics: 10+ Years, $320M+ Revenue, #1 Award, 15+ Brands
+ */
+---
+
+<section class="impact section-dark" data-nav-theme="dark" aria-label="Career impact metrics">
+  <!-- Subtle radial glow -->
+  <div class="impact__glow" aria-hidden="true"></div>
+
+  <div class="impact__inner">
+    <!-- Section overline -->
+    <p class="impact__overline text-label animate-reveal">Impact</p>
+
+    <!-- 4-metric grid -->
+    <div class="impact__grid">
+
+      <!-- 10+ Years -->
+      <div class="impact__metric animate-reveal animate-stagger" data-delay="1">
+        <div class="impact__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Clock/timeline icon — concentric rings with a vertical hand -->
+            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="24" cy="24" r="3" fill="currentColor" opacity="0.8"/>
+            <line x1="24" y1="24" x2="24" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="24" y1="24" x2="32" y2="24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="impact__stat" data-count-to="10" data-count-suffix="+">10+</div>
+        <span class="impact__label">Years of Design Leadership</span>
+      </div>
+
+      <!-- $320M+ Revenue -->
+      <div class="impact__metric animate-reveal animate-stagger" data-delay="2">
+        <div class="impact__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Rising chart icon — bars ascending with an upward trend line -->
+            <rect x="6" y="32" width="6" height="10" rx="1" fill="currentColor" opacity="0.3"/>
+            <rect x="15" y="26" width="6" height="16" rx="1" fill="currentColor" opacity="0.45"/>
+            <rect x="24" y="20" width="6" height="22" rx="1" fill="currentColor" opacity="0.6"/>
+            <rect x="33" y="12" width="6" height="30" rx="1" fill="currentColor" opacity="0.8"/>
+            <path d="M8 30 L18 22 L28 16 L38 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M34 8 L38 8 L38 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="impact__stat" data-count-to="320" data-count-prefix="$" data-count-suffix="M+">$320M+</div>
+        <span class="impact__label">Revenue Influenced</span>
+      </div>
+
+      <!-- #1 Award -->
+      <div class="impact__metric animate-reveal animate-stagger" data-delay="3">
+        <div class="impact__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Trophy/award icon — cup with handles and a star -->
+            <path d="M16 10 H32 V24 C32 30 28 34 24 34 C20 34 16 30 16 24 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M16 14 H12 C10 14 8 16 8 18 C8 22 12 24 16 22" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <path d="M32 14 H36 C38 14 40 16 40 18 C40 22 36 24 32 22" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <line x1="24" y1="34" x2="24" y2="38" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="18" y1="38" x2="30" y2="38" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <!-- Star inside trophy -->
+            <path d="M24 16 L25.5 19 L29 19.5 L26.5 22 L27 25.5 L24 24 L21 25.5 L21.5 22 L19 19.5 L22.5 19 Z" fill="currentColor" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="impact__stat">#1</div>
+        <span class="impact__label">Dieline Award Winner</span>
+      </div>
+
+      <!-- 15+ Brands -->
+      <div class="impact__metric animate-reveal animate-stagger" data-delay="4">
+        <div class="impact__icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Overlapping shapes icon — representing brand diversity -->
+            <rect x="8" y="14" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
+            <rect x="16" y="10" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5" opacity="0.55"/>
+            <rect x="24" y="18" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5" opacity="0.75"/>
+            <circle cx="28" cy="30" r="2.5" fill="currentColor" opacity="0.6"/>
+            <circle cx="22" cy="22" r="2.5" fill="currentColor" opacity="0.4"/>
+            <circle cx="16" cy="26" r="2" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="impact__stat" data-count-to="15" data-count-suffix="+">15+</div>
+        <span class="impact__label">Major CPG Brands</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ====================================================================
+     Impact Metrics — 4-column grid with icons
+     ==================================================================== */
+
+  .impact {
+    padding: var(--space-section) var(--space-5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .impact__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 50% 40%,
+      rgba(212, 165, 116, 0.05) 0%,
+      transparent 60%
+    );
+    z-index: 0;
+  }
+
+  .impact__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .impact__overline {
+    color: var(--accent-gold);
+    text-align: center;
+    margin-bottom: var(--space-7);
+  }
+
+  /* ── 4-column grid ── */
+  .impact__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* ── Individual metric ── */
+  .impact__metric {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* ── SVG icon ── */
+  .impact__icon {
+    color: var(--accent-gold);
+    margin-bottom: var(--space-2);
+    opacity: 0.85;
+  }
+
+  /* ── Stat number ── */
+  .impact__stat {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    color: var(--accent-gold);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(212, 165, 116, 0.1);
+  }
+
+  /* ── Label ── */
+  .impact__label {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-fog);
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+
+  /* ── Tablet: 2x2 grid ── */
+  @media (max-width: 768px) {
+    .impact__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6) var(--space-5);
+    }
+  }
+
+  /* ── Mobile: 2x2 with tighter spacing ── */
+  @media (max-width: 480px) {
+    .impact__grid {
+      gap: var(--space-5) var(--space-3);
+    }
+
+    .impact__icon svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
+</style>
