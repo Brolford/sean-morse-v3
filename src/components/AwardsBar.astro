@@ -1,0 +1,105 @@
+---
+/**
+ * AwardsBar.astro — Impact metrics row for case study pages.
+ *
+ * Props:
+ *   awards — Array of { stat: string, label: string } objects.
+ *            Each renders as a metric with large stat + small label.
+ *
+ * Animations:
+ *   Container uses animate-reveal, individual awards use animate-stagger
+ *   with data-delay for cascading entrance.
+ */
+const { awards = [] } = Astro.props;
+---
+
+{awards.length > 0 && (
+  <div class="awards-bar animate-reveal">
+    <span class="awards-bar__label">Impact & Recognition</span>
+    <div class="awards-bar__grid">
+      {awards.map((award, i) => (
+        <div
+          class="awards-bar__item animate-reveal animate-stagger"
+          data-delay={String(Math.min(i + 1, 8))}
+        >
+          <span class="awards-bar__stat">{award.stat}</span>
+          <span class="awards-bar__desc">{award.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  /* ── Container — bordered top and bottom ── */
+  .awards-bar {
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--surface-stone);
+    border-bottom: 1px solid var(--surface-stone);
+    margin: var(--space-5) 0;
+  }
+
+  /* ── Section label ── */
+  .awards-bar__label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Awards flex row ── */
+  .awards-bar__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  /* ── Individual award metric ── */
+  .awards-bar__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 100px;
+  }
+
+  /* ── Stat — Instrument Serif, bronze accent ── */
+  .awards-bar__stat {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent-bronze);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  /* ── Label — Space Grotesk muted ── */
+  .awards-bar__desc {
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ── Mobile: tighter layout ── */
+  @media (max-width: 768px) {
+    .awards-bar__grid {
+      gap: var(--space-3);
+    }
+
+    .awards-bar__stat {
+      font-size: 26px;
+    }
+
+    .awards-bar__item {
+      min-width: 80px;
+    }
+  }
+</style>

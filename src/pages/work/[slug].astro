@@ -1,0 +1,538 @@
+---
+/**
+ * [slug].astro — Dynamic case study page template.
+ *
+ * Generates one static page per project that has case study content
+ * (problem + solution fields, not password-protected, not coming soon).
+ *
+ * Layout:
+ *   Hero (full-width, dark) -> Content 2-col (light) -> Image gallery ->
+ *   Next/prev nav (dark) -> CTA -> ContactPanel -> Footer
+ */
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import ContactPanel from '../../components/ContactPanel.astro';
+import Accordion from '../../components/Accordion.astro';
+import AwardsBar from '../../components/AwardsBar.astro';
+import ImageGallery from '../../components/ImageGallery.astro';
+import CTASection from '../../components/CTASection.astro';
+import { projects } from '../../data/projects.js';
+
+export function getStaticPaths() {
+  return projects
+    .filter(p => !p.passwordProtected && !p.comingSoon && p.problem && p.solution)
+    .map(project => ({
+      params: { slug: project.slug },
+      props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+
+/* Labels for accordion sections — some projects use Situation/Action/Outcome */
+const problemLabel = project.problemLabel || 'Problem';
+const solutionLabel = project.solutionLabel || 'Solution';
+const resultsLabel = project.resultsLabel || 'Results';
+
+/* Build accordion items array — only include sections that have content */
+const accordionItems = [
+  project.problem && { title: problemLabel, content: project.problem },
+  project.solution && { title: solutionLabel, content: project.solution },
+  project.results && { title: resultsLabel, content: project.results },
+].filter(Boolean);
+
+/* Determine previous and next projects for navigation.
+   Only considers projects that also have case study pages (same filter). */
+const caseStudyProjects = projects.filter(
+  p => !p.passwordProtected && !p.comingSoon && p.problem && p.solution
+);
+const currentIndex = caseStudyProjects.findIndex(p => p.slug === project.slug);
+const prevProject = currentIndex > 0
+  ? caseStudyProjects[currentIndex - 1]
+  : caseStudyProjects[caseStudyProjects.length - 1];
+const nextProject = currentIndex < caseStudyProjects.length - 1
+  ? caseStudyProjects[currentIndex + 1]
+  : caseStudyProjects[0];
+
+/* Hero background: use heroImage or first image, else gradient class */
+const heroImage = project.image || (project.images && project.images[0]) || null;
+---
+
+<Base
+  title={`${project.title} — Sean Morse`}
+  description={project.tagline || project.description}
+>
+  <Nav />
+
+  <main id="main">
+    <!-- ════════════════════════════════════════════════════
+         HERO — Full-width immersive header
+         ════════════════════════════════════════════════════ -->
+    <section
+      class:list={["case-hero", !heroImage && project.gradientClass]}
+      data-nav-theme="dark"
+    >
+      {heroImage && (
+        <img
+          src={heroImage}
+          alt={`${project.title} — hero image`}
+          class="case-hero__image"
+          width="1600"
+          height="900"
+        />
+      )}
+      <div class="case-hero__overlay" aria-hidden="true"></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         CONTENT — 2-column layout on light background
+         ════════════════════════════════════════════════════ -->
+    <section class="section-light case-content" data-nav-theme="light">
+      <div class="case-content__inner">
+        <!-- Back link -->
+        <a href="/work" class="case-content__back animate-reveal">
+          &larr; All Work
+        </a>
+
+        <!-- 2-column grid: main content left, sidebar right -->
+        <div class="case-content__grid">
+
+          <!-- LEFT COLUMN — Project narrative -->
+          <div class="case-content__main">
+            <!-- Title -->
+            <h1 class="case-content__title animate-reveal">
+              {project.title}
+            </h1>
+
+            <!-- Tagline -->
+            {project.tagline && (
+              <p class="case-content__tagline animate-reveal">
+                {project.tagline}
+              </p>
+            )}
+
+            <!-- Intro copy (brand voice) -->
+            {project.intro && (
+              <p class="case-content__intro animate-reveal">
+                {project.intro}
+              </p>
+            )}
+
+            <!-- Description -->
+            <p class="case-content__description animate-reveal">
+              {project.description}
+            </p>
+
+            <!-- Awards/Impact metrics -->
+            {project.awards && project.awards.length > 0 && (
+              <AwardsBar awards={project.awards} />
+            )}
+
+            <!-- Problem / Solution / Results accordion -->
+            {accordionItems.length > 0 && (
+              <div class="case-content__accordion animate-reveal">
+                <Accordion items={accordionItems} />
+              </div>
+            )}
+          </div>
+
+          <!-- RIGHT COLUMN — Project metadata sidebar -->
+          <aside class="case-content__sidebar">
+            <div class="sidebar__inner">
+              {project.client && (
+                <div class="sidebar__block">
+                  <span class="sidebar__label">Client</span>
+                  <span class="sidebar__value">{project.client}</span>
+                </div>
+              )}
+
+              {project.agency && (
+                <div class="sidebar__block">
+                  <span class="sidebar__label">Agency</span>
+                  <span class="sidebar__value">{project.agency}</span>
+                </div>
+              )}
+
+              {project.services && (
+                <div class="sidebar__block">
+                  <span class="sidebar__label">Services</span>
+                  <span class="sidebar__value">{project.services}</span>
+                </div>
+              )}
+
+              {project.credits && project.credits.length > 0 && (
+                <div class="sidebar__block sidebar__block--no-border">
+                  <span class="sidebar__label">Credits</span>
+                  <div class="sidebar__credits">
+                    {project.credits.map(c => (
+                      <div class="sidebar__credit">
+                        <span class="sidebar__credit-name">{c.name}</span>
+                        <span class="sidebar__credit-role"> — {c.role}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {project.year && (
+                <div class="sidebar__block sidebar__block--no-border">
+                  <span class="sidebar__label">Year</span>
+                  <span class="sidebar__value">{project.year}</span>
+                </div>
+              )}
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════
+         IMAGE GALLERY — Full project imagery
+         ════════════════════════════════════════════════════ -->
+    {project.images && project.images.length > 0 && (
+      <section class="section-light case-gallery" data-nav-theme="light">
+        <div class="case-gallery__inner">
+          <ImageGallery images={project.images} alt={project.title} />
+        </div>
+      </section>
+    )}
+
+    <!-- ════════════════════════════════════════════════════
+         NEXT/PREV PROJECT NAVIGATION
+         ════════════════════════════════════════════════════ -->
+    <section class="section-dark case-nav-section" data-nav-theme="dark">
+      <div class="case-nav__inner">
+        {prevProject && (
+          <a href={`/work/${prevProject.slug}`} class="case-nav__link case-nav__link--prev">
+            <span class="case-nav__direction">&larr; Previous</span>
+            <span class="case-nav__project-name">{prevProject.title}</span>
+          </a>
+        )}
+        {nextProject && (
+          <a href={`/work/${nextProject.slug}`} class="case-nav__link case-nav__link--next">
+            <span class="case-nav__direction">Next &rarr;</span>
+            <span class="case-nav__project-name">{nextProject.title}</span>
+          </a>
+        )}
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <CTASection />
+  </main>
+
+  <!-- Fixed overlay panel — outside main content flow -->
+  <ContactPanel />
+
+  <Footer />
+</Base>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     HERO SECTION
+     Full-width, 50vh min-height, image with gradient overlay
+     ═══════════════════════════════════════════════════════════ */
+
+  .case-hero {
+    position: relative;
+    width: 100%;
+    min-height: 50vh;
+    max-height: 600px;
+    overflow: hidden;
+    /* Pad top to clear the fixed nav (~80px) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .case-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Gradient overlay: fades to canvas at bottom for seamless transition */
+  .case-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      var(--surface-canvas) 0%,
+      rgba(247, 244, 238, 0.3) 30%,
+      transparent 50%
+    );
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     CONTENT SECTION
+     2-column layout: narrative left, metadata sidebar right
+     ═══════════════════════════════════════════════════════════ */
+
+  .case-content {
+    padding: 0 var(--space-5) var(--space-section);
+  }
+
+  .case-content__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Back link ── */
+  .case-content__back {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-bronze);
+    text-decoration: none;
+    padding: var(--space-4) 0;
+    margin-bottom: var(--space-3);
+    transition: color 200ms var(--ease-smooth);
+    /* 44px touch target */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .case-content__back:hover {
+    color: var(--accent-camel);
+  }
+
+  /* ── 2-column grid ── */
+  .case-content__grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--space-6);
+  }
+
+  /* ── Left column: title, tagline, copy, awards, accordion ── */
+
+  .case-content__title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 400;
+    color: var(--text-ink);
+    line-height: 1.1;
+    margin-bottom: var(--space-3);
+  }
+
+  .case-content__tagline {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: var(--space-5);
+  }
+
+  .case-content__intro {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    font-weight: 400;
+    color: var(--text-body-color);
+    line-height: 1.7;
+    margin-bottom: var(--space-4);
+  }
+
+  .case-content__description {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    font-weight: 400;
+    color: var(--text-body-color);
+    line-height: 1.7;
+    margin-bottom: var(--space-5);
+  }
+
+  .case-content__accordion {
+    margin-top: var(--space-4);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SIDEBAR — Sticky metadata column
+     ═══════════════════════════════════════════════════════════ */
+
+  .case-content__sidebar {
+    /* Sidebar content area */
+  }
+
+  .sidebar__inner {
+    position: sticky;
+    top: 120px;
+  }
+
+  .sidebar__block {
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--surface-stone);
+  }
+
+  .sidebar__block--no-border {
+    border-bottom: none;
+  }
+
+  .sidebar__label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .sidebar__value {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-ink);
+    line-height: 1.5;
+  }
+
+  .sidebar__credits {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sidebar__credit-name {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-ink);
+  }
+
+  .sidebar__credit-role {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     IMAGE GALLERY SECTION
+     Full-width container with centered max-width
+     ═══════════════════════════════════════════════════════════ */
+
+  .case-gallery {
+    padding: 0 var(--space-5) var(--space-section);
+  }
+
+  .case-gallery__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     NEXT/PREV PROJECT NAVIGATION
+     2-column grid on dark background
+     ═══════════════════════════════════════════════════════════ */
+
+  .case-nav-section {
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .case-nav__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .case-nav__link {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    transition: background-color 200ms var(--ease-smooth);
+    /* 44px touch target */
+    min-height: 44px;
+  }
+
+  .case-nav__link:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+
+  .case-nav__link:focus-visible {
+    outline: 2px solid var(--accent-bronze);
+    outline-offset: 2px;
+  }
+
+  .case-nav__link--prev {
+    align-items: flex-start;
+  }
+
+  .case-nav__link--next {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .case-nav__direction {
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-gold);
+  }
+
+  .case-nav__project-name {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 400;
+    color: var(--text-cream);
+    line-height: 1.2;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE — Mobile (max-width: 768px)
+     Single column, sidebar unsticks and appears above accordion
+     ═══════════════════════════════════════════════════════════ */
+
+  @media (max-width: 768px) {
+    .case-hero {
+      min-height: 35vh;
+      max-height: 400px;
+    }
+
+    .case-content__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    /* On mobile, reorder: sidebar first, then main content */
+    .case-content__sidebar {
+      order: -1;
+    }
+
+    .sidebar__inner {
+      position: static;
+    }
+
+    .case-nav__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .case-nav__link--next {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     REDUCED MOTION
+     ═══════════════════════════════════════════════════════════ */
+
+  @media (prefers-reduced-motion: reduce) {
+    .case-nav__link {
+      transition: opacity 200ms ease;
+    }
+  }
+</style>

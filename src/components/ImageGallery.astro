@@ -1,0 +1,80 @@
+---
+/**
+ * ImageGallery.astro — 2-column masonry-style image grid for case studies.
+ *
+ * Props:
+ *   images — Array of image URL strings.
+ *   alt    — Base string for alt text (project title). Each image gets
+ *            "alt — project image N" for contextual accessibility.
+ *
+ * Layout:
+ *   CSS grid, 2 columns, gap 12px (--radius-md).
+ *   First image + every 5th spans full width for visual rhythm.
+ *   Single column on mobile (<640px).
+ *
+ * Performance:
+ *   All images lazy-loaded with explicit width/height attributes.
+ */
+const { images = [], alt = 'Project' } = Astro.props;
+const hasImages = images.length > 0;
+---
+
+{hasImages && (
+  <div class="image-gallery">
+    {images.map((src, i) => (
+      <div
+        class="gallery__item animate-reveal animate-stagger"
+        data-delay={String(Math.min(i + 1, 4))}
+      >
+        <img
+          src={src}
+          alt={`${alt} — project image ${i + 1}`}
+          class="gallery__img"
+          loading="lazy"
+          width="800"
+          height="600"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+<style>
+  /* ── Grid container — 2 columns with 12px gap ── */
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--radius-md);
+  }
+
+  /* ── First image spans full width as hero ── */
+  .gallery__item:first-child {
+    grid-column: 1 / -1;
+  }
+
+  /* ── Every 5th image (after first) also spans full width for rhythm ── */
+  .gallery__item:nth-child(5n+1):not(:first-child) {
+    grid-column: 1 / -1;
+  }
+
+  /* ── Image styling ── */
+  .gallery__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+  }
+
+  /* ── Mobile: single column ── */
+  @media (max-width: 640px) {
+    .image-gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery__item:first-child,
+    .gallery__item:nth-child(5n+1) {
+      grid-column: 1;
+    }
+  }
+</style>
