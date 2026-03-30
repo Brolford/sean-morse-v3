@@ -117,15 +117,33 @@ const categories = ['All', ...allCategories];
           <div class="work-archive__list">
             {archiveProjects.map((project, i) => (
               <div
-                class="archive-row animate-reveal animate-stagger"
+                class={`archive-row animate-reveal animate-stagger ${project.image ? 'archive-row--has-thumb' : ''}`}
                 data-delay={Math.min(i + 1, 8).toString()}
                 data-category={project.category}
               >
                 <span class="archive-row__index">
                   {String(i + 1 + allProjects.length).padStart(2, '0')}
                 </span>
-                <span class="archive-row__title">{project.title}</span>
-                <span class="archive-row__category">{project.category}</span>
+                {project.image && (
+                  <div class="archive-row__thumb">
+                    <img
+                      src={project.image}
+                      alt=""
+                      aria-hidden="true"
+                      class="archive-row__thumb-img"
+                      loading="lazy"
+                      width="120"
+                      height="80"
+                    />
+                  </div>
+                )}
+                <div class="archive-row__content">
+                  <span class="archive-row__title">{project.title}</span>
+                  <span class="archive-row__category">{project.category}</span>
+                  {project.description && (
+                    <p class="archive-row__description">{project.description}</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -363,14 +381,18 @@ const categories = ['All', ...allCategories];
     flex-direction: column;
   }
 
-  /* ── Archive row — compact ── */
+  /* ── Archive row — compact, with optional thumbnail ── */
   .archive-row {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
+    grid-template-columns: 48px 1fr;
     gap: var(--space-3);
-    align-items: baseline;
-    padding: var(--space-2) 0;
+    align-items: center;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid var(--surface-linen);
+  }
+
+  .archive-row--has-thumb {
+    grid-template-columns: 48px 120px 1fr;
   }
 
   .archive-row:last-child {
@@ -382,6 +404,28 @@ const categories = ['All', ...allCategories];
     font-style: italic;
     font-size: 13px;
     color: var(--surface-pebble);
+  }
+
+  .archive-row__thumb {
+    width: 120px;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .archive-row__thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .archive-row__content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
   }
 
   .archive-row__title {
@@ -400,6 +444,17 @@ const categories = ['All', ...allCategories];
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--text-fog);
+  }
+
+  .archive-row__description {
+    flex-basis: 100%;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 480px;
+    margin: 0;
   }
 
   /* ====================================================================
@@ -432,13 +487,19 @@ const categories = ['All', ...allCategories];
       padding-top: 0;
     }
 
-    /* Archive rows: hide index */
-    .archive-row {
-      grid-template-columns: 1fr auto;
+    /* Archive rows: stack on mobile */
+    .archive-row,
+    .archive-row--has-thumb {
+      grid-template-columns: 1fr;
     }
 
     .archive-row__index {
       display: none;
+    }
+
+    .archive-row__thumb {
+      width: 100%;
+      height: 160px;
     }
   }
 </style>
