@@ -12,20 +12,23 @@ const displayProjects = projects.filter(p => !p.passwordProtected && !p.comingSo
 const categories = ["All", "Packaging", "Brand Identity", "Art Direction", "Strategy", "Co-Founder"];
 
 /**
- * Grid span logic:
- *   Index 0 → span 7 (hero left)
- *   Index 1 → span 5 (hero right)
- *   Index 2+ → span 4 (triple row)
+ * Bento grid span pattern — varied layout across rows:
+ *   Row 1: 7 + 5       (hero pair)
+ *   Row 2: 4 + 4 + 4   (triple)
+ *   Row 3: 5 + 7       (reversed hero)
+ *   Row 4: 6 + 6       (halves)
+ *   Row 5: 4 + 4 + 4   (triple)
+ *   ... repeats from row 2 pattern
  */
+const spanPattern = [7, 5, 4, 4, 4, 5, 7, 6, 6, 4, 4, 4];
+const heightPattern = ['340px', '340px', '260px', '260px', '260px', '300px', '300px', '280px', '280px', '260px', '260px', '260px'];
+
 function getGridSpan(index: number): number {
-  if (index === 0) return 7;
-  if (index === 1) return 5;
-  return 4;
+  return spanPattern[index % spanPattern.length];
 }
 
 function getMinHeight(index: number): string {
-  if (index < 2) return '320px';
-  return '240px';
+  return heightPattern[index % heightPattern.length];
 }
 ---
 
