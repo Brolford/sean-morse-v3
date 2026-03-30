@@ -1,59 +1,85 @@
 ---
 /**
- * FeaturedScroll — Horizontal scroll of featured project cards.
- * Dark section with scroll-snap, auto-rotate via external script.
- * Cards show project gradient/image, category, title, and year.
+ * FeaturedScroll — Continuous horizontal scroll of featured project cards.
+ * Dark section with seamless looping marquee animation.
+ * Cards duplicate to create infinite loop illusion.
+ * Pauses on hover, disabled on reduced-motion (static layout).
  */
 import { projects } from '../data/projects.js';
 const featured = projects.filter(p => p.featured && !p.comingSoon);
 ---
 
 <section class="section-dark featured-scroll" data-nav-theme="dark">
-  <!-- Section label -->
-  <h2 class="text-label featured-scroll__label">Featured Work</h2>
+  <h2 class="text-label featured-scroll__label animate-reveal">Featured Work</h2>
 
-  <!-- Horizontal scroll track -->
-  <div class="featured-scroll-track" role="list">
-    {featured.map((project) => (
-      <a
-        href={`/work/${project.slug}`}
-        class="featured-card hover-lift"
-        role="listitem"
-        aria-label={`View ${project.title} case study`}
-      >
-        {/* Background: hero image or gradient fallback */}
-        {project.image ? (
-          <img
-            src={project.image}
-            alt=""
-            aria-hidden="true"
-            class="featured-card__bg"
-            loading="lazy"
-            width="320"
-            height="420"
-          />
-        ) : (
-          <div class={`featured-card__bg-gradient ${project.gradientClass || ''}`} />
-        )}
-
-        {/* Bottom gradient overlay for text legibility */}
-        <div class="featured-card__overlay" aria-hidden="true" />
-
-        {/* Card content */}
-        <div class="featured-card__content">
-          <span class="featured-card__category">{project.category}</span>
-          <h3 class="featured-card__title">{project.title}</h3>
-          <span class="featured-card__year">{project.year}</span>
-        </div>
-      </a>
-    ))}
+  <!-- Marquee track — contains two copies of the cards for seamless loop -->
+  <div class="featured-scroll__marquee">
+    <div class="featured-scroll__track">
+      {/* First set */}
+      {featured.map((project) => (
+        <a
+          href={`/work/${project.slug}`}
+          class="featured-card hover-lift"
+          aria-label={`View ${project.title} case study`}
+        >
+          {project.image ? (
+            <img
+              src={project.image}
+              alt=""
+              aria-hidden="true"
+              class="featured-card__bg"
+              loading="lazy"
+              width="420"
+              height="520"
+            />
+          ) : (
+            <div class={`featured-card__bg-gradient ${project.gradientClass || ''}`} />
+          )}
+          <div class="featured-card__overlay" aria-hidden="true" />
+          <div class="featured-card__content">
+            <span class="featured-card__category">{project.category}</span>
+            <h3 class="featured-card__title">{project.title}</h3>
+            <span class="featured-card__year">{project.year}</span>
+          </div>
+        </a>
+      ))}
+      {/* Duplicate set for seamless loop */}
+      {featured.map((project) => (
+        <a
+          href={`/work/${project.slug}`}
+          class="featured-card hover-lift"
+          aria-hidden="true"
+          tabindex="-1"
+        >
+          {project.image ? (
+            <img
+              src={project.image}
+              alt=""
+              aria-hidden="true"
+              class="featured-card__bg"
+              loading="lazy"
+              width="420"
+              height="520"
+            />
+          ) : (
+            <div class={`featured-card__bg-gradient ${project.gradientClass || ''}`} />
+          )}
+          <div class="featured-card__overlay" aria-hidden="true" />
+          <div class="featured-card__content">
+            <span class="featured-card__category">{project.category}</span>
+            <h3 class="featured-card__title">{project.title}</h3>
+            <span class="featured-card__year">{project.year}</span>
+          </div>
+        </a>
+      ))}
+    </div>
   </div>
 </section>
 
 <style>
   /* ── Section wrapper ── */
   .featured-scroll {
-    padding: var(--space-section) 0;
+    padding: var(--space-section) 0 var(--space-7);
     overflow: hidden;
   }
 
@@ -65,31 +91,48 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
     margin-bottom: var(--space-4);
   }
 
-  /* ── Scroll track ── */
-  .featured-scroll-track {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 0 var(--space-3);
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+  /* ── Marquee container ── */
+  .featured-scroll__marquee {
+    overflow: hidden;
+    width: 100%;
+    /* Extra vertical padding so hover-lift doesn't clip at top */
+    padding: 16px 0;
   }
 
-  .featured-scroll-track::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+  /* ── Track — holds 2x the cards, animates left ── */
+  .featured-scroll__track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    animation: marquee-scroll 40s linear infinite;
+  }
+
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      /* Move exactly half the track (one full set of cards) */
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Pause on hover ── */
+  @media (hover: hover) {
+    .featured-scroll__marquee:hover .featured-scroll__track {
+      animation-play-state: paused;
+    }
   }
 
   /* ── Individual card ── */
   .featured-card {
-    flex: 0 0 min(420px, 75vw);
+    flex: 0 0 420px;
     height: 520px;
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
-    scroll-snap-align: start;
     text-decoration: none;
     color: inherit;
   }
@@ -128,7 +171,7 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
   .featured-card__content {
     position: relative;
     z-index: 2;
-    padding: var(--space-3);
+    padding: var(--space-4);
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -161,20 +204,32 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
     line-height: 1.4;
   }
 
-  /* ── Mobile: cards fill viewport width ── */
+  /* ── Mobile: smaller cards, slower scroll ── */
   @media (max-width: 640px) {
     .featured-card {
-      flex: 0 0 88vw;
+      flex: 0 0 300px;
+      height: 400px;
+    }
+
+    .featured-scroll__track {
+      animation-duration: 30s;
     }
   }
 
-  /* ── Reduced motion: no hover lift ── */
+  /* ── Reduced motion: no scroll, static row ── */
   @media (prefers-reduced-motion: reduce) {
-    .featured-card {
-      transition: none;
+    .featured-scroll__track {
+      animation: none;
+    }
+
+    .featured-scroll__marquee {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .featured-scroll__marquee::-webkit-scrollbar {
+      display: none;
     }
   }
 </style>
-
-<!-- External script handles auto-scroll, hover pause, and reduced-motion checks -->
-<script is:inline src="/scripts/featured-scroll.js"></script>
