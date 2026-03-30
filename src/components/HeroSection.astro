@@ -34,7 +34,7 @@
     <!-- Gradient mask prevents image/text overlap -->
     <div class="hero-images-mask"></div>
 
-    <!-- 4 stacked cards with project gradients -->
+    <!-- 4 stacked cards — real images where available, gradient fallback -->
     <div class="hero-card hero-card--primary gradient-liquid-iv animate-entrance">
       <div class="hero-card-overlay"></div>
       <div class="hero-card-label">
@@ -43,6 +43,14 @@
       </div>
     </div>
     <div class="hero-card hero-card--secondary gradient-alecs animate-entrance">
+      <img
+        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/d04ab052-bd59-4dc7-80b8-4aa3d25c4597/Alecs_CaseStudy_Layout_V3-14.jpg"
+        alt=""
+        class="hero-card__img"
+        loading="eager"
+        width="400"
+        height="500"
+      />
       <div class="hero-card-overlay"></div>
       <div class="hero-card-label">
         <span class="hero-card-category">Brand Identity</span>
@@ -50,6 +58,14 @@
       </div>
     </div>
     <div class="hero-card hero-card--tertiary gradient-v8 animate-entrance">
+      <img
+        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/e6507e7f-df80-4286-bba1-2813fba5343c/V8_CaseStudy_2023_Logo_Ingredients.jpg"
+        alt=""
+        class="hero-card__img"
+        loading="eager"
+        width="400"
+        height="500"
+      />
       <div class="hero-card-overlay"></div>
       <div class="hero-card-label">
         <span class="hero-card-category">Packaging</span>
@@ -57,6 +73,14 @@
       </div>
     </div>
     <div class="hero-card hero-card--ghost gradient-over-easy animate-entrance">
+      <img
+        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/4b2af325-0a75-45c5-ac4d-2c68495d8e57/OverEasy_CaseStudy_2023_Layout_V5-25.png"
+        alt=""
+        class="hero-card__img"
+        loading="lazy"
+        width="320"
+        height="400"
+      />
       <div class="hero-card-overlay"></div>
       <div class="hero-card-label">
         <span class="hero-card-category">Brand & Packaging</span>
@@ -195,7 +219,18 @@
     will-change: transform;
   }
 
-  /* Bottom gradient overlay — for future image labels */
+  /* Project image fills the card, sits above the gradient fallback */
+  .hero-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+    z-index: 1;
+  }
+
+  /* Bottom gradient overlay for text legibility */
   .hero-card-overlay {
     position: absolute;
     inset: 0;
