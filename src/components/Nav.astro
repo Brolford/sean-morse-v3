@@ -1,0 +1,453 @@
+---
+/**
+ * Nav.astro — 3-state floating navigation
+ *
+ * State 1 (default): Subtle frosted float, full-width
+ * State 2 (.nav-scrolled): Light frosted pill, condensed to center
+ * State 3 (.nav-dark): Dark frosted pill, inverted palette
+ *
+ * JS is handled externally — this component provides the HTML structure
+ * and all CSS states. The nav element exposes id="main-nav" for scripting.
+ *
+ * State transitions are driven by adding/removing classes:
+ *   - .nav-scrolled  → triggers pill morph (added at 100px scroll)
+ *   - .nav-dark      → triggers dark palette (added over dark sections)
+ *   - .nav-open      → triggers mobile overlay + hamburger X transform
+ */
+
+/* Get the current page path for active link styling */
+const currentPath = Astro.url.pathname;
+---
+
+<nav
+  class="nav-floating"
+  id="main-nav"
+  role="navigation"
+  aria-label="Main navigation"
+>
+  <div class="nav-inner">
+    <!-- Full logo — visible in default state -->
+    <a href="/" class="nav-logo" aria-label="Sean Morse — Home">
+      Sean Morse
+    </a>
+
+    <!-- Short logo — visible when scrolled into pill state -->
+    <a href="/" class="nav-logo-short" aria-label="Sean Morse — Home">
+      SM
+    </a>
+
+    <!-- Desktop navigation links -->
+    <div class="nav-links" role="list">
+      <a
+        href="/work"
+        class:list={["nav-link", { "nav-link-active": currentPath.startsWith("/work") }]}
+        role="listitem"
+      >
+        Work
+      </a>
+      <a
+        href="/about"
+        class:list={["nav-link", { "nav-link-active": currentPath.startsWith("/about") }]}
+        role="listitem"
+      >
+        About
+      </a>
+      <button
+        type="button"
+        class="nav-link nav-link-contact"
+        onclick="openContactPanel()"
+        role="listitem"
+      >
+        Contact
+      </button>
+    </div>
+
+    <!-- Mobile hamburger button -->
+    <button
+      type="button"
+      class="nav-hamburger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="nav-mobile-overlay"
+    >
+      <span class="nav-hamburger-line"></span>
+      <span class="nav-hamburger-line"></span>
+      <span class="nav-hamburger-line"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile overlay — sits outside nav for full-screen coverage -->
+<div
+  class="nav-mobile-overlay"
+  id="nav-mobile-overlay"
+  aria-hidden="true"
+  role="dialog"
+  aria-label="Mobile navigation"
+>
+  <div class="nav-mobile-links">
+    <a href="/work" class="nav-mobile-link" data-delay="1">Work</a>
+    <a href="/about" class="nav-mobile-link" data-delay="2">About</a>
+    <button
+      type="button"
+      class="nav-mobile-link nav-mobile-link-contact"
+      onclick="openContactPanel()"
+      data-delay="3"
+    >
+      Contact
+    </button>
+  </div>
+</div>
+
+<style>
+  /* ==========================================================================
+     State 1 — Default: Subtle Frosted Float
+     Full-width bar with light transparency and blur
+     ========================================================================== */
+
+  .nav-floating {
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    right: 16px;
+    z-index: 100;
+    background: rgba(247, 244, 238, 0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    border: 1px solid rgba(226, 222, 214, 0.25);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.03);
+    padding: 14px 28px;
+    transition:
+      max-width 500ms var(--ease-spring),
+      margin 500ms var(--ease-spring),
+      left 500ms var(--ease-spring),
+      right 500ms var(--ease-spring),
+      border-radius 500ms var(--ease-spring),
+      background-color 300ms var(--ease-smooth),
+      border-color 300ms var(--ease-smooth),
+      box-shadow 300ms var(--ease-smooth),
+      padding 500ms var(--ease-spring);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  /* ── Logo (full) ── */
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-ink);
+    white-space: nowrap;
+    transition: color 300ms var(--ease-smooth), opacity 300ms var(--ease-smooth);
+    text-decoration: none;
+  }
+
+  /* ── Logo (short) — hidden by default ── */
+  .nav-logo-short {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-ink);
+    white-space: nowrap;
+    display: none;
+    transition: color 300ms var(--ease-smooth);
+    text-decoration: none;
+  }
+
+  /* ── Desktop links ── */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .nav-link {
+    font-family: var(--font-body);
+    font-size: var(--text-nav);
+    font-weight: 500;
+    color: var(--text-body-color);
+    text-decoration: none;
+    padding: 0;
+    transition: color 200ms var(--ease-smooth);
+  }
+
+  .nav-link:hover {
+    color: var(--text-ink);
+  }
+
+  .nav-link-active {
+    color: var(--text-ink);
+  }
+
+  /* Contact button — accent styled */
+  .nav-link-contact {
+    color: var(--accent-bronze);
+    font-weight: 500;
+  }
+
+  .nav-link-contact:hover {
+    color: var(--accent-camel);
+  }
+
+  /* ==========================================================================
+     State 2 — .nav-scrolled: Light Frosted Pill
+     Condensed centered pill after 100px scroll
+     ========================================================================== */
+
+  .nav-floating:global(.nav-scrolled) {
+    max-width: 480px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    border-radius: var(--radius-xl);
+    background: rgba(247, 244, 238, 0.92);
+    border: 1px solid rgba(226, 222, 214, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 10px 24px;
+  }
+
+  /* Hide full logo, show initials when scrolled */
+  .nav-floating:global(.nav-scrolled) .nav-logo {
+    display: none;
+  }
+
+  .nav-floating:global(.nav-scrolled) .nav-logo-short {
+    display: block;
+  }
+
+  /* ==========================================================================
+     State 3 — .nav-dark: Dark Frosted Pill
+     Activates over dark sections via IntersectionObserver
+     ========================================================================== */
+
+  .nav-floating:global(.nav-dark) {
+    background: rgba(18, 18, 16, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Invert all text colors in dark state */
+  .nav-floating:global(.nav-dark) .nav-logo {
+    color: var(--text-cream);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-logo-short {
+    color: var(--text-cream);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-link {
+    color: var(--text-fog);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-link:hover {
+    color: var(--text-cream);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-link-active {
+    color: var(--text-cream);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-link-contact {
+    color: var(--accent-gold);
+  }
+
+  .nav-floating:global(.nav-dark) .nav-link-contact:hover {
+    color: var(--accent-camel);
+  }
+
+  /* Dark state hamburger lines flip to cream */
+  .nav-floating:global(.nav-dark) .nav-hamburger-line {
+    background-color: var(--text-cream);
+  }
+
+  /* ==========================================================================
+     Hamburger Button — Mobile Only
+     3 lines that transform into an X when .nav-open is active
+     ========================================================================== */
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-hamburger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-ink);
+    border-radius: 1px;
+    transition:
+      transform 300ms var(--ease-spring),
+      opacity 200ms var(--ease-smooth);
+    transform-origin: center;
+  }
+
+  /* Hamburger → X transform when .nav-open is on the nav */
+  .nav-floating:global(.nav-open) .nav-hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .nav-floating:global(.nav-open) .nav-hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .nav-floating:global(.nav-open) .nav-hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ==========================================================================
+     Mobile Overlay
+     Full-screen dark overlay with staggered link entrance
+     ========================================================================== */
+
+  .nav-mobile-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background-color: var(--surface-charcoal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 400ms var(--ease-smooth),
+      visibility 400ms var(--ease-smooth);
+    pointer-events: none;
+  }
+
+  .nav-mobile-overlay:global(.nav-overlay-open) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-mobile-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .nav-mobile-link {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 6vw, 48px);
+    font-weight: 400;
+    color: var(--text-cream);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 400ms var(--ease-spring),
+      transform 400ms var(--ease-spring),
+      color 200ms var(--ease-smooth);
+  }
+
+  .nav-mobile-link:hover {
+    color: var(--accent-gold);
+  }
+
+  /* Contact link in mobile overlay — gold accent */
+  .nav-mobile-link-contact {
+    color: var(--accent-gold);
+    font-family: var(--font-display);
+    font-size: clamp(32px, 6vw, 48px);
+    padding: 0;
+  }
+
+  .nav-mobile-link-contact:hover {
+    color: var(--accent-camel);
+  }
+
+  /* Staggered entrance when overlay is open */
+  .nav-mobile-overlay:global(.nav-overlay-open) .nav-mobile-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-mobile-overlay:global(.nav-overlay-open) .nav-mobile-link[data-delay="1"] {
+    transition-delay: 80ms;
+  }
+
+  .nav-mobile-overlay:global(.nav-overlay-open) .nav-mobile-link[data-delay="2"] {
+    transition-delay: 160ms;
+  }
+
+  .nav-mobile-overlay:global(.nav-overlay-open) .nav-mobile-link[data-delay="3"] {
+    transition-delay: 240ms;
+  }
+
+  /* ==========================================================================
+     Responsive — Mobile (max-width: 768px)
+     ========================================================================== */
+
+  @media (max-width: 768px) {
+    /* Hide desktop links, show hamburger */
+    .nav-links {
+      display: none;
+    }
+
+    .nav-hamburger {
+      display: flex;
+    }
+
+    /* Reduce nav padding on mobile */
+    .nav-floating {
+      padding: 10px 16px;
+    }
+
+    /* Scrolled pill adapts for mobile */
+    .nav-floating:global(.nav-scrolled) {
+      max-width: 320px;
+      padding: 8px 20px;
+    }
+  }
+
+  /* ==========================================================================
+     Reduced Motion
+     Nav morph becomes opacity crossfade only, no shape change
+     ========================================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-floating {
+      transition: opacity 200ms ease;
+    }
+
+    .nav-hamburger-line {
+      transition: opacity 200ms ease;
+    }
+
+    .nav-mobile-overlay {
+      transition: opacity 200ms ease;
+    }
+
+    .nav-mobile-link {
+      transform: none;
+      transition: opacity 200ms ease;
+    }
+
+    .nav-mobile-overlay:global(.nav-overlay-open) .nav-mobile-link {
+      transform: none;
+    }
+  }
+</style>

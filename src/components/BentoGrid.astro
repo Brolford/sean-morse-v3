@@ -1,0 +1,145 @@
+---
+/**
+ * BentoGrid — Asymmetric 12-column project grid with category filtering.
+ * Row 1: 7-col + 5-col (hero pair). Remaining rows: 4+4+4 (triple).
+ * Includes CategoryFilter pills and loads category-filter.js for interactivity.
+ */
+import { projects } from '../data/projects.js';
+import CategoryFilter from './CategoryFilter.astro';
+import ProjectCard from './ProjectCard.astro';
+
+const displayProjects = projects.filter(p => !p.passwordProtected && !p.comingSoon);
+const categories = ["All", "Packaging", "Brand Identity", "Art Direction", "Strategy", "Co-Founder"];
+
+/**
+ * Grid span logic:
+ *   Index 0 → span 7 (hero left)
+ *   Index 1 → span 5 (hero right)
+ *   Index 2+ → span 4 (triple row)
+ */
+function getGridSpan(index: number): number {
+  if (index === 0) return 7;
+  if (index === 1) return 5;
+  return 4;
+}
+
+function getMinHeight(index: number): string {
+  if (index < 2) return '320px';
+  return '240px';
+}
+---
+
+<section class="section-light surface-grain bento-section" data-nav-theme="light">
+  <h2 class="text-display-md bento-section__heading">All Work</h2>
+
+  <CategoryFilter categories={categories} activeCategory="All" />
+
+  <div class="bento-grid" role="list">
+    {displayProjects.map((project, i) => (
+      <div
+        class="bento-grid__item"
+        style={`grid-column: span ${getGridSpan(i)}; min-height: ${getMinHeight(i)};`}
+        role="listitem"
+      >
+        <ProjectCard project={project} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* ── Section wrapper ── */
+  .bento-section {
+    padding: var(--space-section);
+  }
+
+  /* ── Section heading ── */
+  .bento-section__heading {
+    color: var(--text-ink);
+    margin-bottom: var(--space-4);
+    padding: 0 var(--space-5);
+  }
+
+  /* ── 12-column asymmetric grid ── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+    padding: 0 var(--space-5);
+  }
+
+  /* ── Each grid item stretches its card to fill ── */
+  .bento-grid__item {
+    display: flex;
+  }
+
+  /* Make the ProjectCard anchor fill the grid item */
+  .bento-grid__item :global(.project-card) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Filter transition: items animate on category change ── */
+  .bento-grid__item {
+    transition: opacity 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+  }
+
+  .bento-grid__item.filter-hidden {
+    opacity: 0;
+    transform: scale(0.96);
+    pointer-events: none;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .bento-grid__item.filter-entering {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .bento-grid__item.filter-visible {
+    opacity: 1;
+    transform: none;
+    transition: opacity 400ms var(--ease-spring), transform 400ms var(--ease-spring);
+  }
+
+  /* ── Mobile: full-width single column ── */
+  @media (max-width: 768px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* Override inline grid-column spans on mobile */
+    .bento-grid__item {
+      grid-column: span 1 !important;
+      min-height: 200px !important;
+    }
+  }
+
+  /* ── Tablet: 2 columns ── */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    /* First row still alternates, rest go 6+6 */
+    .bento-grid__item:nth-child(n+3) {
+      grid-column: span 6 !important;
+    }
+  }
+
+  /* ── Reduced motion: disable filter transitions ── */
+  @media (prefers-reduced-motion: reduce) {
+    .bento-grid__item {
+      transition: none;
+    }
+
+    .bento-grid__item.filter-entering {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<!-- External script handles category filter pill clicks and grid reflow -->
+<script src="/scripts/category-filter.js"></script>

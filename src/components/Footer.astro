@@ -1,0 +1,136 @@
+---
+/**
+ * Footer.astro — Signature footer
+ *
+ * Surface: void (#0C0C0B) — the darkest surface in the palette.
+ * Layout: 2-col grid with name/tagline/links on left, copyright on right.
+ * Stacks to single column on mobile.
+ */
+---
+
+<footer class="section-void footer">
+  <div class="footer-grid">
+    <!-- Left column: Identity + social links -->
+    <div class="footer-left">
+      <p class="footer-name">Sean Morse</p>
+      <p class="footer-tagline">Strategic design that moves product.</p>
+      <nav class="footer-links" aria-label="Social links">
+        <a href="mailto:sean@seanmorse.com" aria-label="Email Sean Morse">
+          Email
+        </a>
+        <a
+          href="https://www.linkedin.com/in/seanmorse/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Sean Morse on LinkedIn"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://dribbble.com/seanmorse"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Sean Morse on Dribbble"
+        >
+          Dribbble
+        </a>
+      </nav>
+    </div>
+
+    <!-- Right column: Copyright -->
+    <div class="footer-right">
+      <p>&copy; 2026 Sean Morse</p>
+      <p>All rights reserved</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* ==========================================================================
+     Footer Container
+     ========================================================================== */
+
+  .footer {
+    padding: var(--space-6) var(--space-6);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  /* ==========================================================================
+     Footer Grid — 2 columns, left content + right copyright
+     ========================================================================== */
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: var(--space-5);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ==========================================================================
+     Left Column — Name, tagline, social links
+     ========================================================================== */
+
+  .footer-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-cream);
+    line-height: 1.2;
+  }
+
+  .footer-tagline {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 400;
+    color: #444;
+    margin-bottom: var(--space-3);
+    line-height: 1.4;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 20px;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+  }
+
+  .footer-links a {
+    color: #555;
+    text-decoration: none;
+    transition: color 200ms var(--ease-smooth);
+  }
+
+  .footer-links a:hover {
+    color: var(--accent-gold);
+  }
+
+  /* ==========================================================================
+     Right Column — Copyright
+     ========================================================================== */
+
+  .footer-right {
+    text-align: right;
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    color: #333;
+    line-height: 1.6;
+  }
+
+  /* ==========================================================================
+     Responsive — Mobile (max-width: 768px)
+     Stack to single column, left-align everything
+     ========================================================================== */
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-right {
+      text-align: left;
+    }
+  }
+</style>

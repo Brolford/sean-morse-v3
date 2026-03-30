@@ -1,0 +1,323 @@
+---
+/**
+ * HeroSection.astro
+ * Asymmetric hero with left content zone and right stacked project cards.
+ * Surface treatments: grain overlay + radial bronze wash.
+ * Nav theme: light (tells nav.js to use light-mode pill).
+ */
+---
+
+<section class="hero surface-grain" data-nav-theme="light" aria-label="Hero introduction">
+
+  <!-- Radial bronze wash layer (sits behind content, above grain) -->
+  <div class="hero-wash" aria-hidden="true"></div>
+
+  <!-- Content zone — left 46% on desktop, full-width on mobile -->
+  <div class="hero-content animate-entrance">
+    <p class="hero-overline text-label">Sean Morse — Strategic Design</p>
+    <h1 class="hero-headline text-display-xl">
+      Strategic Design<br />
+      Meets Visible<br />
+      <em>Impact.</em>
+    </h1>
+    <p class="hero-description">
+      Strategic packaging and brand identity for CPG brands.
+      10+ years. $320M+ in influenced revenue.
+    </p>
+    <p class="hero-scroll-hint text-label" aria-hidden="true">
+      <span class="scroll-arrow">&#8595;</span> Scroll to explore
+    </p>
+  </div>
+
+  <!-- Image zone — right 58%, stacked project gradient cards -->
+  <div class="hero-images" aria-hidden="true">
+    <!-- Gradient mask prevents image/text overlap -->
+    <div class="hero-images-mask"></div>
+
+    <!-- 4 stacked cards with project gradients -->
+    <div class="hero-card hero-card--primary gradient-liquid-iv animate-entrance">
+      <div class="hero-card-overlay"></div>
+    </div>
+    <div class="hero-card hero-card--secondary gradient-alecs animate-entrance">
+      <div class="hero-card-overlay"></div>
+    </div>
+    <div class="hero-card hero-card--tertiary gradient-v8 animate-entrance">
+      <div class="hero-card-overlay"></div>
+    </div>
+    <div class="hero-card hero-card--ghost gradient-over-easy animate-entrance">
+      <div class="hero-card-overlay"></div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  /* ====================================================================
+     Hero — Full viewport, asymmetric layout
+     ==================================================================== */
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    background: var(--surface-canvas);
+    overflow: hidden;
+  }
+
+  /* Bronze radial wash — positioned to warm the left content area */
+  .hero-wash {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 30% 60%,
+      rgba(139, 107, 74, 0.06) 0%,
+      transparent 70%
+    );
+  }
+
+  /* ====================================================================
+     Content Zone — Left 46%
+     ==================================================================== */
+
+  .hero-content {
+    position: absolute;
+    bottom: 56px;
+    left: 48px;
+    max-width: 480px;
+    z-index: 5;
+  }
+
+  /* Overline: "Sean Morse — Strategic Design" */
+  .hero-overline {
+    color: var(--accent-bronze);
+    margin-bottom: var(--space-4);
+  }
+
+  /* Headline: "Strategic Design Meets Visible Impact." */
+  .hero-headline {
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent-bronze);
+  }
+
+  /* Description paragraph */
+  .hero-description {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #6B6560;
+    max-width: 400px;
+    margin-bottom: var(--space-6);
+  }
+
+  /* Scroll hint with bouncing arrow */
+  .hero-scroll-hint {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .scroll-arrow {
+    display: inline-block;
+    animation: bounce-arrow 2s var(--ease-smooth) infinite;
+  }
+
+  @keyframes bounce-arrow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(6px);
+    }
+  }
+
+  /* ====================================================================
+     Image Zone — Right 58%, stacked gradient cards
+     ==================================================================== */
+
+  .hero-images {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 58%;
+    z-index: 3;
+  }
+
+  /* Gradient mask on left edge — fades from canvas to transparent */
+  .hero-images-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 160px;
+    z-index: 6;
+    background: linear-gradient(
+      to right,
+      var(--surface-canvas) 0%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  /* ====================================================================
+     Individual Hero Cards
+     ==================================================================== */
+
+  .hero-card {
+    position: absolute;
+    border-radius: var(--radius-lg);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 6px 16px rgba(0, 0, 0, 0.08);
+    will-change: transform;
+  }
+
+  /* Bottom gradient overlay — for future image labels */
+  .hero-card-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.35) 0%,
+      transparent 40%
+    );
+    pointer-events: none;
+  }
+
+  /* Primary card (front) — Liquid I.V. colors */
+  .hero-card--primary {
+    width: 320px;
+    height: 420px;
+    top: 50px;
+    right: 30px;
+    transform: rotate(-3.5deg);
+    z-index: 4;
+  }
+
+  /* Secondary card — Alec's colors */
+  .hero-card--secondary {
+    width: 270px;
+    height: 350px;
+    top: 20px;
+    right: 290px;
+    transform: rotate(3deg);
+    z-index: 3;
+  }
+
+  /* Tertiary card — V8 colors */
+  .hero-card--tertiary {
+    width: 250px;
+    height: 320px;
+    bottom: 10px;
+    right: 160px;
+    transform: rotate(-1deg);
+    z-index: 5;
+  }
+
+  /* Ghost card — Over Easy colors, faded + blurred */
+  .hero-card--ghost {
+    width: 200px;
+    height: 260px;
+    top: 100px;
+    right: 480px;
+    transform: rotate(1.5deg);
+    z-index: 2;
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+
+  /* ====================================================================
+     Card Hover — straighten rotation + slight scale, spring easing
+     Only on devices that support hover (no touch)
+     ==================================================================== */
+
+  @media (hover: hover) {
+    .hero-card {
+      transition:
+        transform 600ms var(--ease-spring),
+        box-shadow 600ms var(--ease-spring);
+    }
+
+    .hero-card:hover {
+      transform: rotate(0deg) scale(1.03);
+      box-shadow:
+        0 28px 72px rgba(0, 0, 0, 0.18),
+        0 8px 20px rgba(0, 0, 0, 0.10);
+    }
+  }
+
+  /* ====================================================================
+     Mobile — max-width 768px
+     ==================================================================== */
+
+  @media (max-width: 768px) {
+    .hero {
+      min-height: 80vh;
+    }
+
+    /* Content zone becomes flow layout, not absolute */
+    .hero-content {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      width: 100%;
+      max-width: none;
+      padding: 120px 24px 48px;
+    }
+
+    .hero-description {
+      max-width: none;
+    }
+
+    /* Image zone: single card as background decoration */
+    .hero-images {
+      position: absolute;
+      top: auto;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 40%;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .hero-images-mask {
+      display: none;
+    }
+
+    /* Hide all but primary card on mobile */
+    .hero-card--secondary,
+    .hero-card--tertiary,
+    .hero-card--ghost {
+      display: none;
+    }
+
+    /* Primary card centers as subtle background element */
+    .hero-card--primary {
+      width: 280px;
+      height: 360px;
+      top: auto;
+      bottom: 0;
+      right: -40px;
+      transform: rotate(-2deg);
+    }
+  }
+
+  /* ====================================================================
+     Reduced Motion — disable bounce arrow
+     ==================================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-arrow {
+      animation: none;
+    }
+  }
+</style>

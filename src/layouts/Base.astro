@@ -1,0 +1,86 @@
+---
+/**
+ * Base.astro — Root layout for every page in the Sean Morse v3 portfolio.
+ *
+ * Props:
+ *   title       — Page <title> and OG title (default: "Sean Morse — Design Director")
+ *   description — Meta description + OG description
+ *   ogImage     — OG/Twitter image path or full URL (default: /images/og-image.jpg)
+ */
+import { ViewTransitions } from 'astro:transitions';
+
+const {
+  title = 'Sean Morse — Design Director',
+  description = 'Brand development and packaging design for CPG brands. Portland, OR.',
+  ogImage = '/images/og-image.jpg',
+} = Astro.props;
+
+/* Build absolute OG image URL so social previews always resolve */
+const siteBase = 'https://seanmorse.design';
+const absoluteOgImage = ogImage.startsWith('http') ? ogImage : siteBase + ogImage;
+const canonicalUrl = siteBase + Astro.url.pathname;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={absoluteOgImage} />
+  <meta property="og:url" content={canonicalUrl} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={absoluteOgImage} />
+
+  <!-- Google Fonts: Instrument Serif (display) + Space Grotesk (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Global Styles -->
+  <style is:global>
+    @import '../styles/global.css';
+  </style>
+
+  <!-- View Transitions for smooth page navigation -->
+  <ViewTransitions />
+</head>
+<body>
+  <!-- Accessibility: skip-to-content link for keyboard users -->
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Page content injected here by each page component -->
+  <slot />
+
+  <!-- Scroll-triggered entrance animations + hero effects -->
+  <script is:inline src="/scripts/animations.js" defer></script>
+
+  <!-- Navigation behavior (scroll hide/show, mobile menu, active states) -->
+  <script is:inline src="/scripts/nav.js" defer></script>
+
+  <!--
+    Re-initialize scripts after View Transitions swap in new content.
+    Using is:inline so this survives page transitions (runs in Layout, not page).
+  -->
+  <script is:inline>
+    document.addEventListener('astro:page-load', () => {
+      /* Dispatch a custom event that individual scripts can listen for
+         to re-bind observers, event listeners, or animation triggers
+         after a View Transition completes. */
+      window.dispatchEvent(new CustomEvent('page:ready'));
+    });
+  </script>
+</body>
+</html>

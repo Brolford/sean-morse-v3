@@ -1,0 +1,99 @@
+---
+/**
+ * CategoryFilter — Pill-shaped filter tabs for the bento grid.
+ * Each pill has a data-category attribute used by category-filter.js
+ * to show/hide project cards via CSS class toggling.
+ */
+interface Props {
+  categories: string[];
+  activeCategory?: string;
+}
+
+const { categories, activeCategory = 'All' } = Astro.props;
+---
+
+<nav class="category-filter" aria-label="Filter projects by category">
+  {categories.map((cat) => (
+    <button
+      type="button"
+      class={`filter-pill ${cat === activeCategory ? 'filter-active' : ''}`}
+      data-category={cat}
+      aria-pressed={cat === activeCategory ? 'true' : 'false'}
+    >
+      {cat}
+    </button>
+  ))}
+</nav>
+
+<style>
+  /* ── Filter container ── */
+  .category-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 var(--space-5);
+    margin-bottom: var(--space-3);
+  }
+
+  /* ── Individual pill ── */
+  .filter-pill {
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--surface-stone);
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: all 200ms var(--ease-smooth);
+    /* Ensure 44px min touch target on mobile */
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Active state ── */
+  .filter-pill.filter-active {
+    background: var(--accent-wash);
+    border-color: var(--accent-bronze);
+    color: var(--accent-gold);
+  }
+
+  /* ── Hover state (non-active pills) ── */
+  @media (hover: hover) {
+    .filter-pill:not(.filter-active):hover {
+      border-color: var(--accent-camel);
+      color: var(--text-body-color);
+    }
+  }
+
+  /* ── Focus visible ── */
+  .filter-pill:focus-visible {
+    outline: 2px solid var(--accent-bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Mobile: horizontal scroll if too many pills ── */
+  @media (max-width: 640px) {
+    .category-filter {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: var(--space-2);
+    }
+
+    .category-filter::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-pill {
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+</style>

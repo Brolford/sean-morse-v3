@@ -1,0 +1,180 @@
+---
+/**
+ * FeaturedScroll — Horizontal scroll of featured project cards.
+ * Dark section with scroll-snap, auto-rotate via external script.
+ * Cards show project gradient/image, category, title, and year.
+ */
+import { projects } from '../data/projects.js';
+const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.comingSoon);
+---
+
+<section class="section-dark featured-scroll" data-nav-theme="dark">
+  <!-- Section label -->
+  <span class="text-label featured-scroll__label">Featured Work</span>
+
+  <!-- Horizontal scroll track -->
+  <div class="featured-scroll-track" role="list">
+    {featured.map((project) => (
+      <a
+        href={`/work/${project.slug}`}
+        class="featured-card hover-lift"
+        role="listitem"
+        aria-label={`View ${project.title} case study`}
+      >
+        {/* Background: hero image or gradient fallback */}
+        {project.image ? (
+          <img
+            src={project.image}
+            alt=""
+            aria-hidden="true"
+            class="featured-card__bg"
+            loading="lazy"
+            width="240"
+            height="320"
+          />
+        ) : (
+          <div class={`featured-card__bg-gradient ${project.gradientClass || ''}`} />
+        )}
+
+        {/* Bottom gradient overlay for text legibility */}
+        <div class="featured-card__overlay" aria-hidden="true" />
+
+        {/* Card content */}
+        <div class="featured-card__content">
+          <span class="featured-card__category">{project.category}</span>
+          <h3 class="featured-card__title">{project.title}</h3>
+          <span class="featured-card__year">{project.year}</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* ── Section wrapper ── */
+  .featured-scroll {
+    padding: var(--space-section) 0;
+    overflow: hidden;
+  }
+
+  /* ── Label ── */
+  .featured-scroll__label {
+    display: block;
+    color: var(--accent-gold);
+    padding: 0 var(--space-5);
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Scroll track ── */
+  .featured-scroll-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 var(--space-5);
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .featured-scroll-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  /* ── Individual card ── */
+  .featured-card {
+    flex: 0 0 240px;
+    height: 320px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Background image (absolute fill) */
+  .featured-card__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  /* Gradient fallback (absolute fill) */
+  .featured-card__bg-gradient {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* Bottom gradient overlay for text legibility */
+  .featured-card__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.2) 40%,
+      transparent 70%
+    );
+  }
+
+  /* Card text content */
+  .featured-card__content {
+    position: relative;
+    z-index: 2;
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .featured-card__category {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.4;
+  }
+
+  .featured-card__title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: #ffffff;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .featured-card__year {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.4;
+  }
+
+  /* ── Mobile: cards fill viewport width ── */
+  @media (max-width: 640px) {
+    .featured-card {
+      flex: 0 0 85vw;
+    }
+  }
+
+  /* ── Reduced motion: no hover lift ── */
+  @media (prefers-reduced-motion: reduce) {
+    .featured-card {
+      transition: none;
+    }
+  }
+</style>
+
+<!-- External script handles auto-scroll, hover pause, and reduced-motion checks -->
+<script src="/scripts/featured-scroll.js"></script>

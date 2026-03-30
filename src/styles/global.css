@@ -1,0 +1,457 @@
+/* ==========================================================================
+   Sean Morse Portfolio v3 — Global Design System
+   Direction: Cinematic Editorial
+   Stack: Astro 5.x + Tailwind + Vanilla JS
+   ========================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   1. CSS Custom Properties
+   ========================================================================== */
+
+:root {
+  /* ── Light Surfaces ── */
+  --surface-canvas:   #F7F4EE;
+  --surface-linen:    #EDEAE4;
+  --surface-stone:    #E2DED6;
+  --surface-pebble:   #D4D0C8;
+
+  /* ── Dark Surfaces ── */
+  --surface-void:     #0C0C0B;
+  --surface-charcoal: #121210;
+  --surface-slate:    #1E1D1B;
+  --surface-graphite: #2A2926;
+
+  /* ── Text ── */
+  --text-ink:         #1A1A18;
+  --text-body-color:  #4A4843;
+  --text-muted:       #8A857D;
+  --text-cream:       #F0EBE3;
+  --text-fog:         #B5AFA5;
+
+  /* ── Accents ── */
+  --accent-bronze:    #8B6B4A;
+  --accent-gold:      #D4A574;
+  --accent-camel:     #A8896A;
+  --accent-sage:      #6B8B7A;
+  --accent-wash:      rgba(139, 107, 74, 0.10);
+
+  /* ── Typography ── */
+  --font-display:     'Instrument Serif', serif;
+  --font-body:        'Space Grotesk', sans-serif;
+  --text-display-xl:  clamp(48px, 8vw, 120px);
+  --text-display-lg:  clamp(36px, 5vw, 72px);
+  --text-display-md:  clamp(24px, 3.5vw, 48px);
+  --text-body-size:   16px;
+  --text-nav:         14px;
+  --text-label:       11px;
+  --text-small:       12px;
+
+  /* ── Spacing (8pt grid) ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  16px;
+  --space-4:  24px;
+  --space-5:  32px;
+  --space-6:  48px;
+  --space-7:  64px;
+  --space-8:  96px;
+  --space-9:  128px;
+  --space-section: clamp(48px, 6vw, 96px);
+
+  /* ── Border Radius ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 100px;
+
+  /* ── Easing Curves ── */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-snap:   cubic-bezier(0.5, 1.6, 0.4, 0.7);
+}
+
+/* ==========================================================================
+   2. Base Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-body-size);
+  line-height: 1.7;
+  color: var(--text-body-color);
+  background-color: var(--surface-canvas);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+/* ==========================================================================
+   3. Utility Classes — Typography
+   ========================================================================== */
+
+/* Display type — Instrument Serif */
+.text-display-xl {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xl);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--text-ink);
+}
+
+.text-display-lg {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text-ink);
+}
+
+.text-display-md {
+  font-family: var(--font-display);
+  font-size: var(--text-display-md);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-ink);
+}
+
+/* Labels & UI — Space Grotesk */
+.text-label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.4;
+}
+
+.text-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-body-color);
+}
+
+.text-small {
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Accent text */
+.accent-text {
+  color: var(--accent-bronze);
+}
+
+.accent-text-light {
+  color: var(--accent-gold);
+}
+
+/* ==========================================================================
+   4. Surface Treatments
+   ========================================================================== */
+
+/* Film grain — SVG noise filter at 0.035 opacity for tactile warmth */
+.surface-grain {
+  position: relative;
+}
+
+.surface-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Radial wash — bronze at 6% opacity behind hero/CTA content */
+.surface-wash-bronze {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(139, 107, 74, 0.06) 0%,
+    transparent 70%
+  );
+}
+
+/* Radial wash — sage at 4% opacity as secondary atmosphere */
+.surface-wash-sage {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(107, 139, 122, 0.04) 0%,
+    transparent 70%
+  );
+}
+
+/* Dark directional gradient + radial bronze glow at 6% */
+.surface-dark-gradient {
+  background:
+    radial-gradient(
+      ellipse at 50% 40%,
+      rgba(139, 107, 74, 0.06) 0%,
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      #121210 0%,
+      #1E1D1B 40%,
+      #121210 100%
+    );
+}
+
+/* ==========================================================================
+   5. Section Backgrounds
+   ========================================================================== */
+
+.section-light {
+  background-color: var(--surface-canvas);
+  color: var(--text-body-color);
+}
+
+.section-dark {
+  background-color: var(--surface-charcoal);
+  color: var(--text-fog);
+}
+
+.section-void {
+  background-color: var(--surface-void);
+  color: var(--text-fog);
+}
+
+/* ==========================================================================
+   6. Animation Classes
+   ========================================================================== */
+
+/* Standard scroll reveal — translateY + opacity, 400ms spring */
+.animate-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 400ms var(--ease-spring),
+    transform 400ms var(--ease-spring);
+}
+
+.animate-reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Premium entrance — blur + translateY + scale, 600ms spring */
+.animate-entrance {
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  filter: blur(8px);
+  transition:
+    opacity 600ms var(--ease-spring),
+    transform 600ms var(--ease-spring),
+    filter 600ms var(--ease-spring);
+}
+
+.animate-entrance.revealed {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Stagger delays — 60ms increments, max 8 items (480ms ceiling) */
+.animate-stagger[data-delay="1"] { transition-delay: 60ms; }
+.animate-stagger[data-delay="2"] { transition-delay: 120ms; }
+.animate-stagger[data-delay="3"] { transition-delay: 180ms; }
+.animate-stagger[data-delay="4"] { transition-delay: 240ms; }
+.animate-stagger[data-delay="5"] { transition-delay: 300ms; }
+.animate-stagger[data-delay="6"] { transition-delay: 360ms; }
+.animate-stagger[data-delay="7"] { transition-delay: 420ms; }
+.animate-stagger[data-delay="8"] { transition-delay: 480ms; }
+
+/* Card breathe — signature interaction, 3s loop */
+@keyframes breathe {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+.card-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.card-breathe:hover {
+  animation-play-state: paused;
+  transform: scale(1.06);
+}
+
+/* ==========================================================================
+   7. Hover Lift
+   ========================================================================== */
+
+@media (hover: hover) {
+  .hover-lift {
+    transition:
+      transform 400ms var(--ease-spring),
+      box-shadow 400ms ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 12px 32px rgba(26, 26, 24, 0.10),
+      0 4px 12px rgba(26, 26, 24, 0.06);
+  }
+}
+
+/* ==========================================================================
+   8. Skip Link
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-3);
+  z-index: 999;
+  padding: var(--space-2) var(--space-3);
+  background: var(--text-ink);
+  color: var(--surface-canvas);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+  outline: 2px solid var(--accent-bronze);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   9. Focus Visible
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--accent-bronze);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   10. Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all spatial animations — opacity-only 200ms fades */
+  .animate-reveal,
+  .animate-reveal.revealed {
+    transform: none;
+    transition: opacity 200ms ease;
+  }
+
+  .animate-reveal {
+    opacity: 0;
+  }
+
+  .animate-reveal.revealed {
+    opacity: 1;
+  }
+
+  .animate-entrance,
+  .animate-entrance.revealed {
+    transform: none;
+    filter: none;
+    transition: opacity 200ms ease;
+  }
+
+  .animate-entrance {
+    opacity: 0;
+  }
+
+  .animate-entrance.revealed {
+    opacity: 1;
+  }
+
+  /* Remove stagger delays */
+  .animate-stagger[data-delay="1"],
+  .animate-stagger[data-delay="2"],
+  .animate-stagger[data-delay="3"],
+  .animate-stagger[data-delay="4"],
+  .animate-stagger[data-delay="5"],
+  .animate-stagger[data-delay="6"],
+  .animate-stagger[data-delay="7"],
+  .animate-stagger[data-delay="8"] {
+    transition-delay: 0ms;
+  }
+
+  /* Pause card breathe */
+  .card-breathe {
+    animation: none;
+  }
+
+  .card-breathe:hover {
+    transform: none;
+  }
+
+  /* Disable hover lift spatial movement */
+  .hover-lift,
+  .hover-lift:hover {
+    transform: none !important;
+    transition: opacity 200ms ease;
+  }
+}
+
+/* ==========================================================================
+   11. Project Gradient Fallbacks
+   Carried forward from v2 — gradient backgrounds per project slug
+   ========================================================================== */
+
+.gradient-liquid-iv   { background: linear-gradient(135deg, #1B6B7B, #E8856A); }
+.gradient-leisure     { background: linear-gradient(135deg, #1C2B6E, #F5A623); }
+.gradient-alecs       { background: linear-gradient(135deg, #E8C547, #6B3FA0); }
+.gradient-v8          { background: linear-gradient(135deg, #C62828, #FF8F00); }
+.gradient-elenita     { background: linear-gradient(135deg, #8B4513, #D4A853); }
+.gradient-over-easy   { background: linear-gradient(135deg, #FFD54F, #FF8A65); }
+.gradient-mimio       { background: linear-gradient(135deg, #E84E1B, #FF7043); }
+.gradient-picture-day { background: linear-gradient(135deg, #FF6B8A, #DC143C); }
+.gradient-coming-soon { background: linear-gradient(135deg, #DEDAD4, #C8C4BC); }
+.gradient-archive     { background: linear-gradient(135deg, #B8B4AC, #9E9A92); }

@@ -1,0 +1,130 @@
+---
+/**
+ * Accolade — Stat + context interstitial section.
+ * Large animated number on the left, label + description on the right.
+ * Count-up animation triggered on scroll via IntersectionObserver.
+ */
+interface Props {
+  stat: string;
+  prefix?: string;
+  suffix?: string;
+  label: string;
+  description: string;
+  countTo?: number;
+}
+
+const { stat, prefix = '', suffix = '', label, description, countTo } = Astro.props;
+---
+
+<section class="section-dark accolade" data-nav-theme="dark">
+  {/* Radial bronze glow behind the stat */}
+  <div class="accolade__glow" aria-hidden="true"></div>
+
+  <div class="accolade__layout">
+    {/* Stat number with count-up data attributes */}
+    <div
+      class="accolade__stat animate-entrance"
+      data-count-to={countTo ?? ''}
+      data-count-prefix={prefix}
+      data-count-suffix={suffix}
+    >
+      {stat}
+    </div>
+
+    {/* Context: label + description */}
+    <div class="accolade__context">
+      <span class="accolade__label">{label}</span>
+      <p class="accolade__description">{description}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Section wrapper ── */
+  .accolade {
+    padding: var(--space-section) var(--space-5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Radial bronze glow pseudo-element ── */
+  .accolade__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 20% 50%,
+      rgba(212, 165, 116, 0.06) 0%,
+      transparent 50%
+    );
+    z-index: 0;
+  }
+
+  /* ── 2-column layout: stat (auto) + context (1fr) ── */
+  .accolade__layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-6);
+    align-items: center;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* ── Stat number ── */
+  .accolade__stat {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 72px);
+    font-weight: 400;
+    color: var(--accent-gold);
+    line-height: 1;
+    text-shadow: 0 0 80px rgba(212, 165, 116, 0.12);
+    white-space: nowrap;
+  }
+
+  /* ── Label (overline) ── */
+  .accolade__label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent-bronze);
+    line-height: 1.4;
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── Description text ── */
+  .accolade__description {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-fog);
+    max-width: 400px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── Mobile: single column, centered ── */
+  @media (max-width: 640px) {
+    .accolade__layout {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .accolade__description {
+      max-width: none;
+      margin: 0 auto;
+    }
+
+    .accolade__glow {
+      background: radial-gradient(
+        ellipse at 50% 30%,
+        rgba(212, 165, 116, 0.06) 0%,
+        transparent 50%
+      );
+    }
+  }
+</style>
