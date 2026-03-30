@@ -1,0 +1,80 @@
+---
+/**
+ * work.astro — Work/Archive page for Sean Morse portfolio v3.
+ *
+ * Combines the FeaturedScroll (dark section) and BentoGrid (light section
+ * with category filter showing ALL projects) into a dedicated Work page.
+ * Includes CTASection and ContactPanel for conversion.
+ */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import FeaturedScroll from '../components/FeaturedScroll.astro';
+import BentoGrid from '../components/BentoGrid.astro';
+import CTASection from '../components/CTASection.astro';
+import ContactPanel from '../components/ContactPanel.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="Work — Sean Morse"
+  description="Selected packaging, branding, and identity projects."
+>
+  <Nav />
+
+  <main id="main">
+    <!-- Page header — light background, clears the fixed nav -->
+    <section class="section-light work-header" data-nav-theme="light">
+      <h1 class="text-display-lg work-header__title animate-reveal">Work</h1>
+      <p class="work-header__subtitle animate-reveal">
+        Selected projects across packaging, brand identity, and art direction.
+      </p>
+    </section>
+
+    <!-- Featured projects — dark horizontal scroll -->
+    <FeaturedScroll />
+
+    <!-- Full project archive — light section with category filter + bento grid -->
+    <BentoGrid />
+
+    <!-- Call to action -->
+    <CTASection />
+  </main>
+
+  <!-- Fixed overlay panel — outside main content flow -->
+  <ContactPanel />
+
+  <Footer />
+</Base>
+
+<style>
+  /* ── Page header — sits below the fixed nav ── */
+  .work-header {
+    padding: 160px var(--space-5) var(--space-6);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Heading ── */
+  .work-header__title {
+    color: var(--text-ink);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ── Subtitle ── */
+  .work-header__subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 540px;
+  }
+
+  /* ── Mobile adjustments ── */
+  @media (max-width: 768px) {
+    .work-header {
+      padding-top: 120px;
+      padding-bottom: var(--space-5);
+    }
+  }
+</style>

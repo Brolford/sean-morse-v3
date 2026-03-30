@@ -1,0 +1,270 @@
+---
+/**
+ * about.astro — About page for Sean Morse portfolio v3.
+ *
+ * Editorial layout: large profile image, Sean's exact bio copy,
+ * accent quote block, stats as typographic moments, and a CTA
+ * that opens the contact panel.
+ */
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import ContactPanel from '../components/ContactPanel.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base
+  title="About — Sean Morse"
+  description="Strategic design leader with 10+ years helping brands build visual systems."
+>
+  <Nav />
+
+  <main id="main">
+    <section class="section-light about-section" data-nav-theme="light">
+      <div class="about-content">
+
+        <!-- Overline label -->
+        <span class="text-label about-overline animate-reveal">About</span>
+
+        <!-- Tagline -->
+        <h1 class="text-display-md about-tagline animate-reveal">
+          Strategic Design Meets Visible Impact
+        </h1>
+
+        <!-- Profile image — Sean's claymation portrait -->
+        <img
+          src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/64563150-c4bd-4b26-a9b3-07d8636d1634/Claymation_ProfileImage.jpg"
+          alt="Sean Morse — Design Director based in Portland, Oregon"
+          class="about-profile-image animate-reveal"
+          width="480"
+          height="360"
+          loading="eager"
+        />
+
+        <!-- Bio paragraphs — Sean's exact words -->
+        <p class="about-bio animate-reveal">
+          Sean is a Design Director based in Portland, Oregon, whose decade-plus journey in design traverses diverse industry landscapes. He thrives at the intersection of strategic insight and visual craftsmanship, elevating brands while inspiring the teams he collaborates with.
+        </p>
+
+        <p class="about-bio animate-reveal">
+          With a particular affinity for CPG, Sean spent over seven years at Hatch SF translating complex strategies into compelling design narratives. There, he orchestrated award-winning work for brands including V8, Liquid IV, Alec's Ice Cream, SmartyPants, Gimme, Joolies, Dream Pops, Elenita, and countless others, helping each find its distinct voice in their respective markets.
+        </p>
+
+        <p class="about-bio animate-reveal">
+          Beyond his agency work, Sean selectively pursues freelance projects that spark his curiosity. Most recently, he partnered with Leisure Project, a breakthrough hydration beverage, providing comprehensive brand development from foundation to final packaging. The brand has since experienced remarkable growth in a highly competitive sector.
+        </p>
+
+        <p class="about-bio animate-reveal">
+          Sean's entrepreneurial spirit led him to co-found Picture Day alongside business partner Nick Adam. This tea brand is centered on mental wellness and optimism, reflecting its belief in design's power to nurture positive change.
+        </p>
+
+        <p class="about-bio animate-reveal">
+          When not immersed in the design world, Sean can be found traversing mountain trails, carving down snowy slopes, or contemplating his next creative venture over a crispy IPA. In his most cherished daydream, he's exploring the West's hidden corners alongside Tank, the French Bulldog he hopes to one day adopt, forever in search of the unexpected and the authentic.
+        </p>
+
+        <!-- Accent quote block -->
+        <blockquote class="about-quote animate-reveal">
+          He thrives at the intersection of strategic insight and visual craftsmanship, elevating brands while inspiring the teams he collaborates with.
+        </blockquote>
+
+        <!-- Stats section — typographic moments, 2-col grid -->
+        <div class="about-stats">
+          <div class="about-stat animate-reveal animate-stagger" data-delay="1">
+            <span class="about-stat__number">10+</span>
+            <span class="about-stat__label">Years in Design</span>
+          </div>
+          <div class="about-stat animate-reveal animate-stagger" data-delay="2">
+            <span class="about-stat__number">$320M+</span>
+            <span class="about-stat__label">Revenue Influenced</span>
+          </div>
+          <div class="about-stat animate-reveal animate-stagger" data-delay="3">
+            <span class="about-stat__number">#1</span>
+            <span class="about-stat__label">NEXTY Award Finalist</span>
+          </div>
+          <div class="about-stat animate-reveal animate-stagger" data-delay="4">
+            <span class="about-stat__number">15+</span>
+            <span class="about-stat__label">Brands Elevated</span>
+          </div>
+        </div>
+
+        <!-- CTA — opens contact panel -->
+        <div class="about-cta animate-reveal">
+          <h2 class="text-display-md about-cta__heading">Want to work together?</h2>
+          <button
+            type="button"
+            class="about-cta__button"
+            onclick="openContactPanel()"
+            aria-label="Open contact form"
+          >
+            Get in Touch
+          </button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Fixed overlay panel — outside main content flow -->
+  <ContactPanel />
+
+  <Footer />
+</Base>
+
+<style>
+  /* ── About section container ── */
+  .about-section {
+    padding: 160px var(--space-5) var(--space-section);
+  }
+
+  /* ── Content wrapper — editorial column ── */
+  .about-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* ── Overline ── */
+  .about-overline {
+    display: block;
+    color: var(--accent-bronze);
+    margin-bottom: var(--space-3);
+  }
+
+  /* ── Tagline heading ── */
+  .about-tagline {
+    color: var(--text-ink);
+    margin-bottom: var(--space-5);
+  }
+
+  /* ── Profile image ── */
+  .about-profile-image {
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-5);
+  }
+
+  /* ── Bio paragraphs ── */
+  .about-bio {
+    font-family: var(--font-body);
+    font-size: var(--text-body-size);
+    color: var(--text-body-color);
+    line-height: 1.7;
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Accent quote block ── */
+  .about-quote {
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent-bronze);
+    padding: var(--space-4);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-ink);
+    line-height: 1.5;
+    margin: var(--space-5) 0;
+  }
+
+  /* ── Stats grid ── */
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin: var(--space-6) 0;
+  }
+
+  .about-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  /* Stat number — display type in bronze accent */
+  .about-stat__number {
+    font-family: var(--font-display);
+    font-size: var(--text-display-md);
+    font-weight: 400;
+    color: var(--accent-bronze);
+    line-height: 1.1;
+  }
+
+  /* Stat label — Space Grotesk label style */
+  .about-stat__label {
+    font-family: var(--font-body);
+    font-size: var(--text-label);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* ── CTA at bottom ── */
+  .about-cta {
+    margin-top: var(--space-7);
+    text-align: center;
+  }
+
+  .about-cta__heading {
+    color: var(--text-ink);
+    margin-bottom: var(--space-4);
+  }
+
+  .about-cta__button {
+    display: inline-block;
+    padding: 13px 32px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--surface-canvas);
+    background: var(--text-ink);
+    border-radius: var(--radius-xl);
+    border: none;
+    cursor: pointer;
+    transition: all 300ms var(--ease-spring);
+    min-height: 44px;
+  }
+
+  @media (hover: hover) {
+    .about-cta__button:hover {
+      background: var(--surface-graphite);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(26, 26, 24, 0.12);
+    }
+  }
+
+  .about-cta__button:focus-visible {
+    outline: 2px solid var(--accent-bronze);
+    outline-offset: 2px;
+  }
+
+  .about-cta__button:active {
+    transform: translateY(0);
+  }
+
+  /* ── Mobile adjustments ── */
+  @media (max-width: 768px) {
+    .about-section {
+      padding-top: 120px;
+    }
+
+    .about-stats {
+      gap: var(--space-4);
+    }
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .about-cta__button {
+      transition: background 200ms ease, color 200ms ease;
+    }
+
+    .about-cta__button:hover {
+      transform: none;
+    }
+  }
+</style>
