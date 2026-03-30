@@ -29,8 +29,8 @@ const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.c
             aria-hidden="true"
             class="featured-card__bg"
             loading="lazy"
-            width="240"
-            height="320"
+            width="320"
+            height="420"
           />
         ) : (
           <div class={`featured-card__bg-gradient ${project.gradientClass || ''}`} />
@@ -82,8 +82,8 @@ const featured = projects.filter(p => p.featured && !p.passwordProtected && !p.c
 
   /* ── Individual card ── */
   .featured-card {
-    flex: 0 0 240px;
-    height: 320px;
+    flex: 0 0 min(320px, 40vw);
+    height: 420px;
     border-radius: var(--radius-lg);
     position: relative;
     overflow: hidden;

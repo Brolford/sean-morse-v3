@@ -63,18 +63,26 @@ function initNav() {
   }
 
   // ── Mobile hamburger toggle ─────────────────────────────────────────
+  // The overlay is a sibling of the nav (outside it for full-screen coverage),
+  // so we query the document — not the nav element.
   const hamburger = nav.querySelector('.nav-hamburger');
-  const overlay = nav.querySelector('.nav-mobile-overlay');
+  const overlay = document.getElementById('nav-mobile-overlay');
   if (hamburger && overlay) {
     hamburger.addEventListener('click', () => {
-      nav.classList.toggle('nav-open');
+      const isOpen = nav.classList.toggle('nav-open');
+      overlay.classList.toggle('nav-overlay-open', isOpen);
+      overlay.setAttribute('aria-hidden', String(!isOpen));
+      hamburger.setAttribute('aria-expanded', String(isOpen));
       // Lock body scroll when mobile nav is open
-      document.body.style.overflow = nav.classList.contains('nav-open') ? 'hidden' : '';
+      document.body.style.overflow = isOpen ? 'hidden' : '';
     });
     // Close overlay when any link/button inside it is clicked
     overlay.querySelectorAll('a, button').forEach(link => {
       link.addEventListener('click', () => {
         nav.classList.remove('nav-open');
+        overlay.classList.remove('nav-overlay-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        hamburger.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
       });
     });

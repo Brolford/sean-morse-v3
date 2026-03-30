@@ -111,23 +111,26 @@ const currentPath = Astro.url.pathname;
     left: 16px;
     right: 16px;
     z-index: 100;
-    background: rgba(247, 244, 238, 0.35);
+    /* Explicit max-width so the transition has a start value (auto is not animatable) */
+    max-width: 100%;
+    background-color: rgba(247, 244, 238, 0.35);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 14px;
     border: 1px solid rgba(226, 222, 214, 0.25);
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.03);
     padding: 14px 28px;
+    /* Spring easing for spatial morphs, smooth easing for color/opacity */
     transition:
-      max-width 500ms var(--ease-spring),
-      margin 500ms var(--ease-spring),
-      left 500ms var(--ease-spring),
-      right 500ms var(--ease-spring),
-      border-radius 500ms var(--ease-spring),
-      background-color 300ms var(--ease-smooth),
+      max-width 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      margin 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      left 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      right 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding 500ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 500ms cubic-bezier(0.16, 1, 0.3, 1),
       border-color 300ms var(--ease-smooth),
-      box-shadow 300ms var(--ease-smooth),
-      padding 500ms var(--ease-spring);
+      box-shadow 300ms var(--ease-smooth);
   }
 
   .nav-inner {
@@ -144,20 +147,31 @@ const currentPath = Astro.url.pathname;
     font-weight: 400;
     color: var(--text-ink);
     white-space: nowrap;
-    transition: color 300ms var(--ease-smooth), opacity 300ms var(--ease-smooth);
     text-decoration: none;
+    /* Use opacity + width collapse instead of display:none for smooth crossfade */
+    opacity: 1;
+    max-width: 200px;
+    overflow: hidden;
+    transition:
+      color 300ms var(--ease-smooth),
+      opacity 300ms var(--ease-smooth),
+      max-width 300ms var(--ease-smooth);
   }
 
-  /* ── Logo (short) — hidden by default ── */
+  /* ── Logo (short) — hidden by default via opacity + zero width ── */
   .nav-logo-short {
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 400;
     color: var(--text-ink);
     white-space: nowrap;
-    display: none;
-    transition: color 300ms var(--ease-smooth);
     text-decoration: none;
+    /* Start hidden — crossfades in when scrolled */
+    position: absolute;
+    opacity: 0;
+    transition:
+      color 300ms var(--ease-smooth),
+      opacity 300ms var(--ease-smooth);
   }
 
   /* ── Desktop links ── */
@@ -206,19 +220,26 @@ const currentPath = Astro.url.pathname;
     left: 0;
     right: 0;
     border-radius: var(--radius-xl);
-    background: rgba(247, 244, 238, 0.92);
+    /* Use background-color (not shorthand) so the transition interpolates correctly */
+    background-color: rgba(247, 244, 238, 0.92);
     border: 1px solid rgba(226, 222, 214, 0.4);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     padding: 10px 24px;
   }
 
-  /* Hide full logo, show initials when scrolled */
+  /* Crossfade: full logo out, initials in */
   .nav-floating:global(.nav-scrolled) .nav-logo {
-    display: none;
+    opacity: 0;
+    max-width: 0;
+    /* Prevent layout jump — collapse instantly once faded */
+    transition:
+      opacity 200ms var(--ease-smooth),
+      max-width 200ms var(--ease-smooth) 100ms;
   }
 
   .nav-floating:global(.nav-scrolled) .nav-logo-short {
-    display: block;
+    opacity: 1;
+    position: relative;
   }
 
   /* ==========================================================================
@@ -227,7 +248,8 @@ const currentPath = Astro.url.pathname;
      ========================================================================== */
 
   .nav-floating:global(.nav-dark) {
-    background: rgba(18, 18, 16, 0.88);
+    /* Use background-color (not shorthand) for smooth interpolation */
+    background-color: rgba(18, 18, 16, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }

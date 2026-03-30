@@ -3,44 +3,55 @@ function initCategoryFilter() {
   const grid = document.querySelector('.bento-grid');
   if (!filters.length || !grid) return;
 
-  const cards = grid.querySelectorAll('.project-card');
+  // Target the grid-item wrappers (grid children that control layout),
+  // and read category from the nested .project-card's data-category attribute
+  const gridItems = grid.querySelectorAll('.bento-grid__item');
 
   filters.forEach(btn => {
     btn.addEventListener('click', () => {
       const category = btn.dataset.filterCategory;
 
-      // Update active state
-      filters.forEach(f => f.classList.remove('filter-active'));
+      // Update active pill state + aria
+      filters.forEach(f => {
+        f.classList.remove('filter-active');
+        f.setAttribute('aria-pressed', 'false');
+      });
       btn.classList.add('filter-active');
+      btn.setAttribute('aria-pressed', 'true');
 
-      // Filter cards
+      // Filter grid items
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let visibleIndex = 0;
 
-      cards.forEach((card, i) => {
+      gridItems.forEach((item) => {
+        const card = item.querySelector('.project-card');
+        if (!card) return;
         const cardCategory = card.dataset.category;
         const matches = category === 'All' || cardCategory === category;
 
         if (prefersReduced) {
-          card.style.display = matches ? '' : 'none';
+          item.style.display = matches ? '' : 'none';
           return;
         }
 
-        // Fade out
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(12px)';
+        if (!matches) {
+          // Hide non-matching items
+          item.classList.remove('filter-visible', 'filter-entering');
+          item.classList.add('filter-hidden');
+        } else {
+          // Show matching items with staggered entrance
+          item.classList.remove('filter-hidden');
+          item.classList.add('filter-entering');
+          item.style.display = '';
 
-        setTimeout(() => {
-          card.style.display = matches ? '' : 'none';
+          const delay = visibleIndex * 60;
+          visibleIndex++;
 
-          if (matches) {
-            // Staggered fade in
-            setTimeout(() => {
-              card.style.transition = 'opacity 400ms cubic-bezier(0.16, 1, 0.3, 1), transform 400ms cubic-bezier(0.16, 1, 0.3, 1)';
-              card.style.opacity = '1';
-              card.style.transform = 'translateY(0)';
-            }, i * 60);
-          }
-        }, 200);
+          setTimeout(() => {
+            item.classList.remove('filter-entering');
+            item.classList.add('filter-visible');
+          }, delay);
+        }
       });
     });
   });

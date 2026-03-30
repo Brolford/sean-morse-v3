@@ -17,7 +17,7 @@ const { categories, activeCategory = 'All' } = Astro.props;
     <button
       type="button"
       class={`filter-pill ${cat === activeCategory ? 'filter-active' : ''}`}
-      data-category={cat}
+      data-filter-category={cat}
       aria-pressed={cat === activeCategory ? 'true' : 'false'}
     >
       {cat}
