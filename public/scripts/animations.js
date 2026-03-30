@@ -55,7 +55,7 @@ function initAnimations() {
           const target = parseFloat(el.dataset.countTo);
           const prefix = el.dataset.countPrefix || '';
           const suffix = el.dataset.countSuffix || '';
-          const duration = 1400;
+          const duration = 2200;
           const startTime = performance.now();
 
           // Reduced motion: show final value immediately, no animation
@@ -68,8 +68,8 @@ function initAnimations() {
           function update(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // easeOutExpo: fast start, smooth deceleration to rest
-            const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            // easeOutCubic: gradual deceleration, numbers stay readable longer
+            const eased = 1 - Math.pow(1 - progress, 3);
             const current = Math.round(eased * target);
             el.textContent = prefix + current + suffix;
             if (progress < 1) requestAnimationFrame(update);
@@ -78,7 +78,10 @@ function initAnimations() {
           observer.unobserve(el);
         }
       });
-    }, { threshold: 0.15 });
+    }, {
+      threshold: 0.6,
+      rootMargin: '0px 0px 0px 0px'
+    });
     countElements.forEach(el => countObserver.observe(el));
   }
 }
