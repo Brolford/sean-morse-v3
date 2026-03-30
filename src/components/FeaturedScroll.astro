@@ -9,7 +9,7 @@ import { projects } from '../data/projects.js';
 const featured = projects.filter(p => p.featured && !p.comingSoon);
 ---
 
-<section class="section-dark featured-scroll" data-nav-theme="dark">
+<section class="section-light featured-scroll surface-grain" data-nav-theme="light">
   <h2 class="text-label featured-scroll__label animate-reveal">Featured Work</h2>
 
   <!-- Marquee track — contains two copies of the cards for seamless loop -->
@@ -86,7 +86,7 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
   /* ── Label ── */
   .featured-scroll__label {
     display: block;
-    color: var(--accent-gold);
+    color: var(--accent-bronze);
     padding: 0 var(--space-5);
     margin-bottom: var(--space-4);
   }
