@@ -1,28 +1,37 @@
 ---
 /**
- * work.astro — Work/Archive page for Sean Morse portfolio v3.
- *
- * Combines the FeaturedScroll (dark section) and BentoGrid (light section
- * with category filter showing ALL projects) into a dedicated Work page.
- * Includes CTASection and ContactPanel for conversion.
+ * work.astro — Complete portfolio catalog.
+ * Editorial list layout: index number, thumbnail, title, description, category, year.
+ * Archive section below for older/smaller projects.
+ * Category filter pills work across both sections.
+ * Distinct from homepage bento grid — this is the studio wall, not the gallery.
  */
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
-import FeaturedScroll from '../components/FeaturedScroll.astro';
-import BentoGrid from '../components/BentoGrid.astro';
 import CTASection from '../components/CTASection.astro';
 import ContactPanel from '../components/ContactPanel.astro';
 import Footer from '../components/Footer.astro';
+import { projects, archiveProjects } from '../data/projects.js';
+
+/* All projects except the "Coming Soon" placeholder */
+const allProjects = projects.filter(p => !p.comingSoon);
+
+/* Gather unique categories for filter pills */
+const allCategories = [...new Set([
+  ...allProjects.map(p => p.category),
+  ...archiveProjects.map(p => p.category),
+])].filter(Boolean);
+const categories = ['All', ...allCategories];
 ---
 
 <Base
   title="Work — Sean Morse"
-  description="Selected packaging, branding, and identity projects."
+  description="Complete portfolio: packaging, branding, and identity projects across 15+ CPG brands."
 >
   <Nav />
 
   <main id="main">
-    <!-- Page header — light background, clears the fixed nav -->
+    <!-- Page header -->
     <section class="section-light work-header" data-nav-theme="light">
       <h1 class="text-display-lg work-header__title animate-reveal">Work</h1>
       <p class="work-header__subtitle animate-reveal">
@@ -30,37 +39,123 @@ import Footer from '../components/Footer.astro';
       </p>
     </section>
 
-    <!-- Featured projects — dark horizontal scroll -->
-    <FeaturedScroll />
+    <!-- Filter pills -->
+    <section class="section-light work-filters" data-nav-theme="light">
+      <nav class="work-pills" aria-label="Filter projects by category">
+        {categories.map((cat) => (
+          <button
+            type="button"
+            class={`filter-pill ${cat === 'All' ? 'filter-active' : ''}`}
+            data-filter-category={cat}
+            aria-pressed={cat === 'All' ? 'true' : 'false'}
+          >
+            {cat}
+          </button>
+        ))}
+      </nav>
+    </section>
 
-    <!-- Full project archive — light section with category filter + bento grid -->
-    <BentoGrid />
+    <!-- Featured project list -->
+    <section class="section-light work-list" data-nav-theme="light">
+      <div class="work-list__inner">
+        {allProjects.map((project, i) => {
+          const hasDetail = !project.comingSoon && project.problem;
+          const Tag = hasDetail ? 'a' : 'div';
+          return (
+            <Tag
+              href={hasDetail ? `/work/${project.slug}` : undefined}
+              class={`work-row animate-reveal animate-stagger ${hasDetail ? 'work-row--linked' : 'work-row--static'}`}
+              data-delay={Math.min(i + 1, 8).toString()}
+              data-category={project.category}
+            >
+              {/* Index number */}
+              <span class="work-row__index">
+                {String(i + 1).padStart(2, '0')}
+              </span>
 
-    <!-- Call to action -->
+              {/* Thumbnail */}
+              <div class={`work-row__thumb ${!project.image ? (project.gradientClass || 'gradient-archive') : ''}`}>
+                {project.image && (
+                  <img
+                    src={project.image}
+                    alt=""
+                    aria-hidden="true"
+                    class="work-row__thumb-img"
+                    loading="lazy"
+                    width="180"
+                    height="120"
+                  />
+                )}
+              </div>
+
+              {/* Title + category + description */}
+              <div class="work-row__content">
+                <div class="work-row__header">
+                  <span class="work-row__title">{project.title}</span>
+                  <span class="work-row__category">{project.category}</span>
+                </div>
+                {project.description && (
+                  <p class="work-row__description">{project.description}</p>
+                )}
+              </div>
+
+              {/* Year */}
+              <span class="work-row__year">{project.year}</span>
+            </Tag>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Archive section -->
+    {archiveProjects.length > 0 && (
+      <section class="section-light work-archive" data-nav-theme="light">
+        <div class="work-archive__inner">
+          <div class="work-archive__divider">
+            <span class="text-label work-archive__label">Additional Work</span>
+          </div>
+          <div class="work-archive__list">
+            {archiveProjects.map((project, i) => (
+              <div
+                class="archive-row animate-reveal animate-stagger"
+                data-delay={Math.min(i + 1, 8).toString()}
+                data-category={project.category}
+              >
+                <span class="archive-row__index">
+                  {String(i + 1 + allProjects.length).padStart(2, '0')}
+                </span>
+                <span class="archive-row__title">{project.title}</span>
+                <span class="archive-row__category">{project.category}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
     <CTASection />
   </main>
 
-  <!-- Fixed overlay panel — outside main content flow -->
   <ContactPanel />
-
   <Footer />
 </Base>
 
 <style>
-  /* ── Page header — sits below the fixed nav ── */
+  /* ====================================================================
+     Work Page — Header
+     ==================================================================== */
+
   .work-header {
-    padding: 160px var(--space-5) var(--space-6);
-    max-width: 1200px;
+    padding: 160px var(--space-5) var(--space-4);
+    max-width: 1000px;
     margin: 0 auto;
   }
 
-  /* ── Heading ── */
   .work-header__title {
     color: var(--text-ink);
     margin-bottom: var(--space-2);
   }
 
-  /* ── Subtitle ── */
   .work-header__subtitle {
     font-family: var(--font-body);
     font-size: var(--text-body-size);
@@ -70,11 +165,317 @@ import Footer from '../components/Footer.astro';
     max-width: 540px;
   }
 
-  /* ── Mobile adjustments ── */
+  /* ====================================================================
+     Filter Pills
+     ==================================================================== */
+
+  .work-filters {
+    padding: var(--space-3) var(--space-5) var(--space-5);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .work-pills {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  /* Filter pill base — reuse from CategoryFilter */
+  .work-pills :global(.filter-pill) {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 8px 16px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--surface-stone);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 200ms var(--ease-smooth);
+    min-height: 36px;
+  }
+
+  .work-pills :global(.filter-pill:hover) {
+    border-color: var(--accent-camel);
+    color: var(--accent-bronze);
+  }
+
+  .work-pills :global(.filter-active) {
+    background: var(--accent-wash);
+    border-color: var(--accent-bronze);
+    color: var(--accent-bronze);
+  }
+
+  /* ====================================================================
+     Project List — Editorial Rows
+     ==================================================================== */
+
+  .work-list {
+    padding: 0 var(--space-5) var(--space-6);
+  }
+
+  .work-list__inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* ── Individual row ── */
+  .work-row {
+    display: grid;
+    grid-template-columns: 48px 180px 1fr auto;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--surface-stone);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Linked rows get hover effect */
+  .work-row--linked {
+    transition: background 200ms var(--ease-smooth);
+    border-radius: var(--radius-sm);
+    margin: 0 calc(-1 * var(--space-2));
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+
+  @media (hover: hover) {
+    .work-row--linked:hover {
+      background: rgba(139, 107, 74, 0.04);
+    }
+
+    .work-row--linked:hover .work-row__title {
+      color: var(--accent-bronze);
+    }
+  }
+
+  .work-row--linked:focus-visible {
+    outline: 2px solid var(--accent-bronze);
+    outline-offset: 2px;
+  }
+
+  /* ── Index number ── */
+  .work-row__index {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text-muted);
+    align-self: start;
+    padding-top: 4px;
+  }
+
+  /* ── Thumbnail ── */
+  .work-row__thumb {
+    width: 180px;
+    height: 120px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .work-row__thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Content: title + category + description ── */
+  .work-row__content {
+    min-width: 0;
+  }
+
+  .work-row__header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .work-row__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 400;
+    color: var(--text-ink);
+    line-height: 1.2;
+    transition: color 200ms var(--ease-smooth);
+  }
+
+  .work-row__category {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+  }
+
+  .work-row__description {
+    margin-top: var(--space-2);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 480px;
+  }
+
+  /* ── Year ── */
+  .work-row__year {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-fog);
+    flex-shrink: 0;
+    align-self: start;
+    padding-top: 4px;
+  }
+
+  /* ====================================================================
+     Archive Section
+     ==================================================================== */
+
+  .work-archive {
+    padding: 0 var(--space-5) var(--space-8);
+  }
+
+  .work-archive__inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .work-archive__divider {
+    border-top: 1px solid var(--surface-pebble);
+    padding-top: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  .work-archive__label {
+    color: var(--text-muted);
+  }
+
+  .work-archive__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Archive row — compact ── */
+  .archive-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: var(--space-3);
+    align-items: baseline;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--surface-linen);
+  }
+
+  .archive-row:last-child {
+    border-bottom: none;
+  }
+
+  .archive-row__index {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--surface-pebble);
+  }
+
+  .archive-row__title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-body-color);
+    line-height: 1.3;
+  }
+
+  .archive-row__category {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-fog);
+  }
+
+  /* ====================================================================
+     Responsive
+     ==================================================================== */
+
   @media (max-width: 768px) {
     .work-header {
       padding-top: 120px;
-      padding-bottom: var(--space-5);
+      padding-bottom: var(--space-3);
+    }
+
+    /* Stack rows vertically on mobile */
+    .work-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    .work-row__index {
+      display: none;
+    }
+
+    .work-row__thumb {
+      width: 100%;
+      height: 200px;
+    }
+
+    .work-row__year {
+      align-self: auto;
+      padding-top: 0;
+    }
+
+    /* Archive rows: hide index */
+    .archive-row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .archive-row__index {
+      display: none;
     }
   }
 </style>
+
+<!-- Category filter script for work page rows -->
+<script is:inline>
+(function() {
+  function initWorkFilter() {
+    var pills = document.querySelectorAll('[data-filter-category]');
+    var rows = document.querySelectorAll('[data-category]');
+    if (!pills.length || !rows.length) return;
+
+    pills.forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        var cat = this.dataset.filterCategory;
+
+        /* Update active pill */
+        pills.forEach(function(p) {
+          p.classList.remove('filter-active');
+          p.setAttribute('aria-pressed', 'false');
+        });
+        this.classList.add('filter-active');
+        this.setAttribute('aria-pressed', 'true');
+
+        /* Filter rows */
+        rows.forEach(function(row) {
+          if (cat === 'All' || row.dataset.category === cat) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+
+  initWorkFilter();
+  document.addEventListener('astro:page-load', initWorkFilter);
+})();
+</script>
