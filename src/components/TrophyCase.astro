@@ -1,53 +1,63 @@
 ---
 /**
  * TrophyCase.astro — Editorial Ledger credibility section.
- * 2x3 grid of Sean's most impressive project outcomes.
- * Pure social proof — no images, stats are the visual.
+ * Horizontal bar of Sean's 6 most impressive project outcomes.
+ * Pure social proof — stats are the visual.
  * Sits between Hero and Featured Scroll on homepage.
  */
 ---
 
 <section class="trophy section-dark" data-nav-theme="dark" aria-label="Career recognition and impact">
-  <!-- Radial bronze glow behind grid -->
+  <!-- Radial bronze glow -->
   <div class="trophy__glow" aria-hidden="true"></div>
 
   <div class="trophy__inner">
     <!-- Section overline -->
     <h2 class="text-label trophy__overline animate-reveal">Recognition</h2>
 
-    <!-- 2x3 ledger grid -->
-    <div class="trophy__grid">
+    <!-- Horizontal bar of stats -->
+    <div class="trophy__bar">
 
-      <!-- Row 1 -->
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="1">
         <div class="trophy__stat">#1</div>
-        <span class="trophy__label">Dieline Award — Dairy</span>
+        <span class="trophy__label">Dieline Award</span>
         <span class="trophy__attribution">Alec's Ice Cream</span>
       </div>
+
+      <div class="trophy__divider" aria-hidden="true"></div>
+
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="2">
         <div class="trophy__stat" data-count-to="320" data-count-prefix="$" data-count-suffix="M+">$320M+</div>
         <span class="trophy__label">Revenue Influenced</span>
         <span class="trophy__attribution">Liquid I.V.</span>
       </div>
 
-      <!-- Row 2 -->
+      <div class="trophy__divider" aria-hidden="true"></div>
+
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="3">
         <div class="trophy__stat" data-count-to="7" data-count-suffix="x">7x</div>
         <span class="trophy__label">Distribution Growth</span>
         <span class="trophy__attribution">Alec's Ice Cream</span>
       </div>
+
+      <div class="trophy__divider" aria-hidden="true"></div>
+
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="4">
         <div class="trophy__stat">Acquired</div>
         <span class="trophy__label">By Unilever</span>
         <span class="trophy__attribution">Liquid I.V.</span>
       </div>
 
-      <!-- Row 3 -->
+      <div class="trophy__divider" aria-hidden="true"></div>
+
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="5">
         <div class="trophy__stat">NEXTY</div>
         <span class="trophy__label">Finalist &times;2</span>
         <span class="trophy__attribution">Alec's Ice Cream</span>
       </div>
+
+      <div class="trophy__divider" aria-hidden="true"></div>
+
       <div class="trophy__cell animate-reveal animate-stagger" data-delay="6">
         <div class="trophy__stat">Whole Foods</div>
         <span class="trophy__label">National Placement</span>
@@ -60,16 +70,15 @@
 
 <style>
   /* ====================================================================
-     Trophy Case — Editorial Ledger
+     Trophy Case — Horizontal Bar
      ==================================================================== */
 
   .trophy {
-    padding: var(--space-section) var(--space-5);
+    padding: var(--space-7) var(--space-5);
     position: relative;
     overflow: hidden;
   }
 
-  /* ── Radial bronze glow ── */
   .trophy__glow {
     position: absolute;
     inset: 0;
@@ -85,94 +94,126 @@
   .trophy__inner {
     position: relative;
     z-index: 1;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 
-  /* ── Overline ── */
   .trophy__overline {
     color: var(--accent-gold);
     text-align: center;
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-5);
   }
 
-  /* ── 2x3 grid with hairline dividers ── */
-  .trophy__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  /* ── Horizontal bar ── */
+  .trophy__bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: var(--space-4) 0;
+  }
+
+  /* ── Vertical dividers between cells ── */
+  .trophy__divider {
+    width: 1px;
+    align-self: stretch;
+    background: rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
   }
 
   /* ── Individual cell ── */
   .trophy__cell {
+    flex: 1;
     text-align: center;
-    padding: var(--space-5) var(--space-4);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: var(--space-3) var(--space-3);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-1);
+    gap: 2px;
+    min-width: 0;
   }
 
-  /* Vertical divider — every odd cell gets a right border */
-  .trophy__cell:nth-child(odd) {
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  /* Remove bottom border from last row */
-  .trophy__cell:nth-last-child(-n+2) {
-    border-bottom: none;
-  }
-
-  /* ── Stat number ── */
+  /* ── Stat ── */
   .trophy__stat {
     font-family: var(--font-display);
-    font-size: clamp(32px, 4vw, 48px);
+    font-size: clamp(24px, 2.5vw, 36px);
     font-weight: 400;
     color: var(--accent-gold);
     line-height: 1;
     text-shadow: 0 0 60px rgba(212, 165, 116, 0.08);
+    white-space: nowrap;
   }
 
   /* ── Label ── */
   .trophy__label {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #7D5F40; /* Darkened bronze — passes 4.5:1 on charcoal */
+    letter-spacing: 1.5px;
+    color: #7D5F40;
     line-height: 1.4;
-    margin-top: var(--space-1);
+    margin-top: 4px;
+    white-space: nowrap;
   }
 
-  /* ── Attribution (project name) ── */
+  /* ── Attribution ── */
   .trophy__attribution {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 400;
     color: var(--text-fog);
     line-height: 1.4;
+    white-space: nowrap;
   }
 
-  /* ── Mobile: single column ── */
-  @media (max-width: 480px) {
-    .trophy__grid {
-      grid-template-columns: 1fr;
+  /* ── Tablet: allow wrapping into 2 rows of 3 ── */
+  @media (max-width: 900px) {
+    .trophy__bar {
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
-    /* Remove vertical dividers */
-    .trophy__cell:nth-child(odd) {
-      border-right: none;
-    }
-
-    /* All cells get bottom border except the last */
     .trophy__cell {
+      flex: 0 0 calc(33.333% - 1px);
+      padding: var(--space-3) var(--space-2);
+    }
+
+    /* Hide vertical dividers on wrap, use bottom border on first row */
+    .trophy__divider {
+      display: none;
+    }
+
+    .trophy__cell:nth-child(-n+5) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  /* ── Mobile: 2-column grid ── */
+  @media (max-width: 480px) {
+    .trophy__bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 0;
+    }
+
+    .trophy__divider {
+      display: none;
+    }
+
+    .trophy__cell {
+      padding: var(--space-4) var(--space-3);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .trophy__cell:last-child {
+    /* Vertical divider via right border on odd cells */
+    .trophy__cell:nth-child(odd) {
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Remove bottom border from last row */
+    .trophy__cell:nth-last-of-type(-n+2) {
       border-bottom: none;
     }
   }

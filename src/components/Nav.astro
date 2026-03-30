@@ -158,7 +158,7 @@ const currentPath = Astro.url.pathname;
       max-width 300ms var(--ease-smooth);
   }
 
-  /* ── Logo (short) — hidden by default via opacity + zero width ── */
+  /* ── Logo (short) — hidden by default, fades in when scrolled ── */
   .nav-logo-short {
     font-family: var(--font-display);
     font-size: 18px;
@@ -166,12 +166,14 @@ const currentPath = Astro.url.pathname;
     color: var(--text-ink);
     white-space: nowrap;
     text-decoration: none;
-    /* Start hidden — crossfades in when scrolled */
-    position: absolute;
+    /* Start hidden — collapsed width so it doesn't take space */
     opacity: 0;
+    max-width: 0;
+    overflow: hidden;
     transition:
       color 300ms var(--ease-smooth),
-      opacity 300ms var(--ease-smooth);
+      opacity 300ms var(--ease-smooth),
+      max-width 200ms var(--ease-smooth);
   }
 
   /* ── Desktop links ── */
@@ -239,7 +241,7 @@ const currentPath = Astro.url.pathname;
 
   .nav-floating:global(.nav-scrolled) .nav-logo-short {
     opacity: 1;
-    position: relative;
+    max-width: 40px;
   }
 
   /* ==========================================================================

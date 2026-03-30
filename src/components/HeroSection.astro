@@ -58,6 +58,10 @@
     </div>
     <div class="hero-card hero-card--ghost gradient-over-easy animate-entrance">
       <div class="hero-card-overlay"></div>
+      <div class="hero-card-label">
+        <span class="hero-card-category">Brand & Packaging</span>
+        <span class="hero-card-name">Over Easy</span>
+      </div>
     </div>
   </div>
 
@@ -234,7 +238,7 @@
     z-index: 5;
   }
 
-  /* Ghost card — Over Easy colors, faded + blurred (non-interactive) */
+  /* Ghost card — Over Easy colors, recessed but interactive */
   .hero-card--ghost {
     width: 240px;
     height: 300px;
@@ -244,7 +248,6 @@
     z-index: 2;
     opacity: 0.5;
     filter: blur(1px);
-    pointer-events: none;
   }
 
   /* ====================================================================
@@ -295,6 +298,7 @@
         opacity 300ms var(--ease-spring),
         transform 500ms var(--ease-spring),
         box-shadow 500ms var(--ease-spring),
+        filter 300ms var(--ease-spring),
         z-index 0ms;
     }
 
@@ -304,23 +308,29 @@
         transform 300ms ease;
     }
 
-    /* When ANY card in the group is hovered, dim all non-ghost cards */
-    .hero-images:hover .hero-card:not(.hero-card--ghost) {
+    /* When ANY card in the group is hovered, dim all cards */
+    .hero-images:hover .hero-card {
       opacity: 0.85;
     }
 
+    /* Ghost starts dimmer, so dim it further when siblings are hovered */
+    .hero-images:hover .hero-card--ghost {
+      opacity: 0.35;
+    }
+
     /* The hovered card snaps to full opacity, straightens, scales, deepens shadow */
-    .hero-images:hover .hero-card:not(.hero-card--ghost):hover {
+    .hero-images:hover .hero-card:hover {
       opacity: 1;
       z-index: 10;
       transform: rotate(0deg) scale(1.05);
+      filter: blur(0);
       box-shadow:
         0 32px 80px rgba(0, 0, 0, 0.22),
         0 10px 24px rgba(0, 0, 0, 0.12);
     }
 
-    /* Reveal label on hovered card */
-    .hero-card:not(.hero-card--ghost):hover .hero-card-label {
+    /* Reveal label on any hovered card */
+    .hero-card:hover .hero-card-label {
       opacity: 1;
       transform: translateY(0);
     }

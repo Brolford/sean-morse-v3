@@ -55,7 +55,7 @@ function initAnimations() {
           const target = parseFloat(el.dataset.countTo);
           const prefix = el.dataset.countPrefix || '';
           const suffix = el.dataset.countSuffix || '';
-          const duration = 600;
+          const duration = 1400;
           const startTime = performance.now();
 
           // Reduced motion: show final value immediately, no animation
