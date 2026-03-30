@@ -313,11 +313,27 @@ button {
 
 .card-breathe {
   animation: breathe 3s ease-in-out infinite;
+  transition: opacity 300ms var(--ease-smooth);
 }
 
+@media (hover: hover) {
+  /* When any sibling in the grid is hovered, dim all cards */
+  .bento-grid:hover .card-breathe {
+    opacity: 0.6;
+  }
+
+  /* The hovered card: full opacity, pause breathe, scale up */
+  .bento-grid:hover .bento-grid__item:hover .card-breathe {
+    opacity: 1;
+    animation-play-state: paused;
+    transform: scale(1.03);
+  }
+}
+
+/* Fallback for non-hover devices */
 .card-breathe:hover {
   animation-play-state: paused;
-  transform: scale(1.06);
+  transform: scale(1.03);
 }
 
 /* ==========================================================================
