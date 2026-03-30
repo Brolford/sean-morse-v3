@@ -176,11 +176,12 @@ const currentPath = Astro.url.pathname;
       max-width 200ms var(--ease-smooth);
   }
 
-  /* ── Desktop links ── */
+  /* ── Desktop links — pushed to right edge ── */
   .nav-links {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    margin-left: auto;
   }
 
   .nav-link {
@@ -217,15 +218,16 @@ const currentPath = Astro.url.pathname;
      ========================================================================== */
 
   .nav-floating:global(.nav-scrolled) {
-    max-width: 480px;
+    max-width: 420px;
     margin: 0 auto;
     left: 0;
     right: 0;
     border-radius: var(--radius-xl);
-    /* Use background-color (not shorthand) so the transition interpolates correctly */
-    background-color: rgba(247, 244, 238, 0.92);
-    border: 1px solid rgba(226, 222, 214, 0.4);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    background-color: rgba(247, 244, 238, 0.95);
+    border: 1px solid rgba(226, 222, 214, 0.5);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.10),
+      0 2px 8px rgba(0, 0, 0, 0.06);
     padding: 10px 24px;
   }
 
@@ -253,7 +255,9 @@ const currentPath = Astro.url.pathname;
     /* Use background-color (not shorthand) for smooth interpolation */
     background-color: rgba(18, 18, 16, 0.88);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.25),
+      0 2px 8px rgba(0, 0, 0, 0.12);
   }
 
   /* Invert all text colors in dark state */
