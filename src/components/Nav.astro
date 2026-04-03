@@ -223,8 +223,8 @@ const currentPath = Astro.url.pathname;
     left: 0;
     right: 0;
     border-radius: var(--radius-xl);
-    background-color: rgba(247, 244, 238, 0.95);
-    border: 1px solid rgba(226, 222, 214, 0.5);
+    background-color: rgba(247, 244, 238, 0.55);
+    border: 1px solid rgba(226, 222, 214, 0.35);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.10),
       0 2px 8px rgba(0, 0, 0, 0.06);
@@ -444,10 +444,28 @@ const currentPath = Astro.url.pathname;
       padding: 10px 16px;
     }
 
-    /* Scrolled pill adapts for mobile */
+    /* Disable pill morph on mobile — keep full nav persistent */
     .nav-floating:global(.nav-scrolled) {
-      max-width: 320px;
-      padding: 8px 20px;
+      max-width: 100%;
+      margin: 0;
+      left: 16px;
+      right: 16px;
+      border-radius: 14px;
+      background-color: rgba(247, 244, 238, 0.35);
+      border: 1px solid rgba(226, 222, 214, 0.25);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.03);
+      padding: 10px 16px;
+    }
+
+    /* Keep full logo visible on scroll, hide initials */
+    .nav-floating:global(.nav-scrolled) .nav-logo {
+      opacity: 1;
+      max-width: 200px;
+    }
+
+    .nav-floating:global(.nav-scrolled) .nav-logo-short {
+      opacity: 0;
+      max-width: 0;
     }
   }
 

@@ -106,16 +106,18 @@ function getMinHeight(index: number): string {
     transition: opacity 400ms var(--ease-spring), transform 400ms var(--ease-spring);
   }
 
-  /* ── Mobile: full-width single column ── */
+  /* ── Mobile: 2-column grid ── */
   @media (max-width: 768px) {
     .bento-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 0 var(--space-3);
     }
 
     /* Override inline grid-column spans on mobile */
     .bento-grid__item {
       grid-column: span 1 !important;
-      min-height: 200px !important;
+      min-height: 160px !important;
     }
   }
 
