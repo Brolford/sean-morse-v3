@@ -26,14 +26,14 @@ const currentPath = Astro.url.pathname;
   aria-label="Main navigation"
 >
   <div class="nav-inner">
-    <!-- Full logo — visible in default state -->
-    <a href="/" class="nav-logo" aria-label="Sean Morse — Home">
-      Sean Morse
-    </a>
-
-    <!-- Short logo — visible when scrolled into pill state -->
-    <a href="/" class="nav-logo-short" aria-label="Sean Morse — Home">
-      SM
+    <!--
+      Logo: single link with two stacked text variants.
+      Both spans are absolutely positioned so they crossfade in place
+      without any layout reflow during the pill morph.
+    -->
+    <a href="/" class="nav-logo-link" aria-label="Sean Morse — Home">
+      <span class="nav-logo-full" aria-hidden="false">Sean Morse</span>
+      <span class="nav-logo-short" aria-hidden="true">SM</span>
     </a>
 
     <!-- Desktop navigation links -->
@@ -140,40 +140,41 @@ const currentPath = Astro.url.pathname;
     gap: var(--space-3);
   }
 
-  /* ── Logo (full) ── */
-  .nav-logo {
+  /* ── Logo container ──
+     Reserves a small fixed width (fits "SM"). The full "Sean Morse" span
+     overflows visually into the open nav space — no layout shift during morph.
+     Both spans are absolutely positioned and crossfade by opacity only. */
+  .nav-logo-link {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 22px;
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 400;
     color: var(--text-ink);
-    white-space: nowrap;
     text-decoration: none;
-    /* Use opacity + width collapse instead of display:none for smooth crossfade */
-    opacity: 1;
-    max-width: 200px;
-    overflow: hidden;
-    transition:
-      color 300ms var(--ease-smooth),
-      opacity 300ms var(--ease-smooth),
-      max-width 300ms var(--ease-smooth);
+    transition: color 300ms var(--ease-smooth);
+    flex-shrink: 0;
   }
 
-  /* ── Logo (short) — hidden by default, fades in when scrolled ── */
+  .nav-logo-full,
   .nav-logo-short {
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--text-ink);
+    position: absolute;
+    left: 0;
+    top: 0;
     white-space: nowrap;
-    text-decoration: none;
-    /* Start hidden — collapsed width so it doesn't take space */
+    line-height: 22px;
+    transition: opacity 250ms var(--ease-smooth);
+    will-change: opacity;
+  }
+
+  .nav-logo-full {
+    opacity: 1;
+  }
+
+  .nav-logo-short {
     opacity: 0;
-    max-width: 0;
-    overflow: hidden;
-    transition:
-      color 300ms var(--ease-smooth),
-      opacity 300ms var(--ease-smooth),
-      max-width 200ms var(--ease-smooth);
   }
 
   /* ── Desktop links — pushed to right edge ── */
@@ -231,19 +232,13 @@ const currentPath = Astro.url.pathname;
     padding: 10px 24px;
   }
 
-  /* Crossfade: full logo out, initials in */
-  .nav-floating:global(.nav-scrolled) .nav-logo {
+  /* Crossfade in place — no layout change, opacity only */
+  .nav-floating:global(.nav-scrolled) .nav-logo-full {
     opacity: 0;
-    max-width: 0;
-    /* Prevent layout jump — collapse instantly once faded */
-    transition:
-      opacity 200ms var(--ease-smooth),
-      max-width 200ms var(--ease-smooth) 100ms;
   }
 
   .nav-floating:global(.nav-scrolled) .nav-logo-short {
     opacity: 1;
-    max-width: 40px;
   }
 
   /* ==========================================================================
@@ -261,11 +256,7 @@ const currentPath = Astro.url.pathname;
   }
 
   /* Invert all text colors in dark state */
-  .nav-floating:global(.nav-dark) .nav-logo {
-    color: var(--text-cream);
-  }
-
-  .nav-floating:global(.nav-dark) .nav-logo-short {
+  .nav-floating:global(.nav-dark) .nav-logo-link {
     color: var(--text-cream);
   }
 
@@ -457,15 +448,13 @@ const currentPath = Astro.url.pathname;
       padding: 10px 16px;
     }
 
-    /* Keep full logo visible on scroll, hide initials */
-    .nav-floating:global(.nav-scrolled) .nav-logo {
+    /* Keep full logo visible on scroll, hide initials (no pill morph on mobile) */
+    .nav-floating:global(.nav-scrolled) .nav-logo-full {
       opacity: 1;
-      max-width: 200px;
     }
 
     .nav-floating:global(.nav-scrolled) .nav-logo-short {
       opacity: 0;
-      max-width: 0;
     }
   }
 

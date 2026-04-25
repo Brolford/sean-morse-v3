@@ -70,10 +70,15 @@ const canonicalUrl = siteBase + Astro.url.pathname;
   <slot />
 
   <!-- Scroll-triggered entrance animations + hero effects -->
-  <script is:inline src="/scripts/animations.js" defer></script>
+  <script is:inline src="/scripts/animations.js"></script>
 
-  <!-- Navigation behavior (scroll hide/show, mobile menu, active states) -->
-  <script is:inline src="/scripts/nav.js" defer></script>
+  <!--
+    Navigation behavior (scroll morph, mobile menu, active states).
+    No `defer` — this script lives at end of <body>, so the DOM is already
+    parsed. `defer` here only delays execution, which on slow phones can
+    cause taps on the hamburger to register before the listener is bound.
+  -->
+  <script is:inline src="/scripts/nav.js"></script>
 
   <!--
     Re-initialize scripts after View Transitions swap in new content.
