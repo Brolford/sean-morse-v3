@@ -3,7 +3,11 @@
  * ContactPanel — Slide-up contact form panel.
  * Opens via openContactPanel() global function (triggered by CTA button).
  * Closes via close button, Escape key, or backdrop click.
- * Form submits to Formspree endpoint (placeholder — Brady will update).
+ *
+ * Submission: opens user's default mail client with a pre-formatted email
+ * to sean@. No backend required — works zero-config. If Sean ever wants
+ * a real form-to-inbox pipeline (Formspree etc.), swap the submit handler
+ * back to a normal POST.
  */
 ---
 
@@ -28,8 +32,8 @@
     {/* Title */}
     <h2 class="contact-panel__title">Let's talk.</h2>
 
-    {/* Form */}
-    <form class="contact-panel__form" action="https://formspree.io/f/placeholder" method="POST">
+    {/* Form — submit handler constructs a mailto: URL (no backend). */}
+    <form class="contact-panel__form" id="contact-form" onsubmit="return submitContactForm(event)">
       {/* Name field */}
       <div class="form-field">
         <label for="contact-name" class="form-field__label">Name</label>
@@ -377,4 +381,37 @@
       }
     }
   });
+
+  /* Form submission: build a formatted email and hand off to the user's
+     default mail client. Returning false prevents native form submission. */
+  window.submitContactForm = function (event) {
+    event.preventDefault();
+    var form = event.target;
+    var fd = new FormData(form);
+
+    var name = (fd.get('name') || '').toString().trim();
+    var email = (fd.get('email') || '').toString().trim();
+    var company = (fd.get('company') || '').toString().trim();
+    var projectType = (fd.get('project_type') || '').toString().trim();
+    var message = (fd.get('message') || '').toString().trim();
+
+    var subject = 'New project inquiry' + (name ? ' — ' + name : '');
+    var bodyLines = [
+      'Name: ' + name,
+      'Email: ' + email,
+      'Company: ' + (company || '—'),
+      'Project Type: ' + projectType,
+      '',
+      'Message:',
+      message
+    ];
+    var body = bodyLines.join('\n');
+
+    var mailto = 'mailto:sfxm89@gmail.com'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+
+    window.location.href = mailto;
+    return false;
+  };
 </script>
