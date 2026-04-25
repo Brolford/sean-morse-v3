@@ -6,6 +6,7 @@
  * Pauses on hover, disabled on reduced-motion (static layout).
  */
 import { projects } from '../data/projects.js';
+import { withSize, buildSrcset } from '../utils/image';
 const featured = projects.filter(p => p.featured && !p.comingSoon);
 ---
 
@@ -24,11 +25,14 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
         >
           {project.image ? (
             <img
-              src={project.image}
+              src={withSize(project.image, 750)}
+              srcset={buildSrcset(project.image)}
+              sizes="(max-width: 640px) 300px, 420px"
               alt=""
               aria-hidden="true"
               class="featured-card__bg"
               loading="lazy"
+              decoding="async"
               width="420"
               height="520"
             />
@@ -53,11 +57,14 @@ const featured = projects.filter(p => p.featured && !p.comingSoon);
         >
           {project.image ? (
             <img
-              src={project.image}
+              src={withSize(project.image, 750)}
+              srcset={buildSrcset(project.image)}
+              sizes="(max-width: 640px) 300px, 420px"
               alt=""
               aria-hidden="true"
               class="featured-card__bg"
               loading="lazy"
+              decoding="async"
               width="420"
               height="520"
             />

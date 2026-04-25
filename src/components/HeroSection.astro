@@ -5,6 +5,7 @@
  * Surface treatments: grain overlay + radial bronze wash.
  * Nav theme: light (tells nav.js to use light-mode pill).
  */
+import { withSize, buildSrcset } from '../utils/image';
 ---
 
 <section class="hero surface-grain" data-nav-theme="light" aria-label="Hero introduction">
@@ -35,67 +36,37 @@
     <div class="hero-images-mask"></div>
 
     <!-- 4 stacked cards — real images where available, gradient fallback -->
-    <div class="hero-card hero-card--primary gradient-leisure animate-entrance">
-      <img
-        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/0c0ae01d-58e0-4fb2-b5c8-e439ea8cac3a/Leisure_CaseStudy_OC_Can.jpg"
-        alt=""
-        class="hero-card__img"
-        loading="eager"
-        fetchpriority="high"
-        width="400"
-        height="500"
-      />
-      <div class="hero-card-overlay"></div>
-      <div class="hero-card-label">
-        <span class="hero-card-category">Packaging</span>
-        <span class="hero-card-name">Leisure Project</span>
+    {/*
+      Hero cards — all imagery comes from the same Squarespace CDN, normalized
+      via the withSize/buildSrcset helpers so mobile gets ~100KB images
+      instead of the original 5MB+ source files.
+    */}
+    {[
+      { src: 'https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/0c0ae01d-58e0-4fb2-b5c8-e439ea8cac3a/Leisure_CaseStudy_OC_Can.jpg', cls: 'hero-card--primary', grad: 'gradient-leisure', loading: 'eager', priority: 'high', w: 400, h: 500, cat: 'Packaging', name: 'Leisure Project' },
+      { src: 'https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/1705302269425-JDIMXJL80NOSYL1FII17/Elenita_CaseStudy_2023_MezcalMuze_Face_Photo_V1.jpg', cls: 'hero-card--secondary', grad: 'gradient-elenita', loading: 'eager', priority: 'auto', w: 400, h: 500, cat: 'Brand Identity', name: 'Elenita Mezcal' },
+      { src: 'https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/d04ab052-bd59-4dc7-80b8-4aa3d25c4597/Alecs_CaseStudy_Layout_V3-14.jpg', cls: 'hero-card--tertiary', grad: 'gradient-alecs', loading: 'eager', priority: 'auto', w: 400, h: 500, cat: 'Brand Identity', name: "Alec's Ice Cream" },
+      { src: 'https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/4b2af325-0a75-45c5-ac4d-2c68495d8e57/OverEasy_CaseStudy_2023_Layout_V5-25.png', cls: 'hero-card--ghost', grad: 'gradient-over-easy', loading: 'lazy', priority: 'auto', w: 320, h: 400, cat: 'Brand & Packaging', name: 'Over Easy' },
+    ].map((c) => (
+      <div class={`hero-card ${c.cls} ${c.grad} animate-entrance`}>
+        <img
+          src={withSize(c.src, 750)}
+          srcset={buildSrcset(c.src)}
+          sizes="(max-width: 768px) 50vw, 400px"
+          alt=""
+          class="hero-card__img"
+          loading={c.loading}
+          fetchpriority={c.priority}
+          decoding="async"
+          width={c.w}
+          height={c.h}
+        />
+        <div class="hero-card-overlay"></div>
+        <div class="hero-card-label">
+          <span class="hero-card-category">{c.cat}</span>
+          <span class="hero-card-name">{c.name}</span>
+        </div>
       </div>
-    </div>
-    <div class="hero-card hero-card--secondary gradient-elenita animate-entrance">
-      <img
-        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/1705302269425-JDIMXJL80NOSYL1FII17/Elenita_CaseStudy_2023_MezcalMuze_Face_Photo_V1.jpg"
-        alt=""
-        class="hero-card__img"
-        loading="eager"
-        width="400"
-        height="500"
-      />
-      <div class="hero-card-overlay"></div>
-      <div class="hero-card-label">
-        <span class="hero-card-category">Brand Identity</span>
-        <span class="hero-card-name">Elenita Mezcal</span>
-      </div>
-    </div>
-    <div class="hero-card hero-card--tertiary gradient-alecs animate-entrance">
-      <img
-        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/d04ab052-bd59-4dc7-80b8-4aa3d25c4597/Alecs_CaseStudy_Layout_V3-14.jpg"
-        alt=""
-        class="hero-card__img"
-        loading="eager"
-        width="400"
-        height="500"
-      />
-      <div class="hero-card-overlay"></div>
-      <div class="hero-card-label">
-        <span class="hero-card-category">Brand Identity</span>
-        <span class="hero-card-name">Alec's Ice Cream</span>
-      </div>
-    </div>
-    <div class="hero-card hero-card--ghost gradient-over-easy animate-entrance">
-      <img
-        src="https://images.squarespace-cdn.com/content/v1/57acaaf46a4963c5935b4584/4b2af325-0a75-45c5-ac4d-2c68495d8e57/OverEasy_CaseStudy_2023_Layout_V5-25.png"
-        alt=""
-        class="hero-card__img"
-        loading="lazy"
-        width="320"
-        height="400"
-      />
-      <div class="hero-card-overlay"></div>
-      <div class="hero-card-label">
-        <span class="hero-card-category">Brand & Packaging</span>
-        <span class="hero-card-name">Over Easy</span>
-      </div>
-    </div>
+    ))}
   </div>
 
 </section>

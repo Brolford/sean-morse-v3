@@ -4,6 +4,8 @@
  * Displays project gradient or hero image, category label, and title.
  * Uses card-breathe animation and hover-lift from global.css.
  */
+import { withSize, buildSrcset } from '../utils/image';
+
 interface Props {
   project: {
     slug: string;
@@ -27,11 +29,14 @@ const { project } = Astro.props;
   {/* Background: hero image or gradient fallback */}
   {project.image ? (
     <img
-      src={project.image}
+      src={withSize(project.image, 750)}
+      srcset={buildSrcset(project.image)}
+      sizes="(max-width: 768px) 50vw, (max-width: 1100px) 33vw, 360px"
       alt=""
       aria-hidden="true"
       class="project-card__bg"
       loading="lazy"
+      decoding="async"
       width="400"
       height="320"
     />

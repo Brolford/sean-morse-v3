@@ -26,16 +26,22 @@
   /* ── Text ── */
   --text-ink:         #1A1A18;
   --text-body-color:  #4A4843;
-  --text-muted:       #8A857D;
+  /* --text-muted darkened from #8A857D (3.36:1 on canvas — fails AA) to
+     #6B6760 (5.22:1 on canvas — passes AA at 4.5:1). Used as muted body
+     text on light surfaces. Dark-section usages stay on --text-fog instead. */
+  --text-muted:       #6B6760;
   --text-cream:       #F0EBE3;
   --text-fog:         #B5AFA5;
 
   /* ── Accents ── */
-  --accent-bronze:    #8B6B4A;
+  /* --accent-bronze darkened from #8B6B4A (~4.5:1, fails axe) to #7A5536
+     (6.1:1 on canvas) so accent links, eyebrows, and the nav Contact button
+     clear AA without losing the bronze warmth. */
+  --accent-bronze:    #7A5536;
   --accent-gold:      #D4A574;
   --accent-camel:     #A8896A;
   --accent-sage:      #6B8B7A;
-  --accent-wash:      rgba(139, 107, 74, 0.10);
+  --accent-wash:      rgba(122, 85, 54, 0.10);
 
   /* ── Typography ── */
   --font-display:     'Instrument Serif', serif;

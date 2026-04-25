@@ -19,28 +19,10 @@
  *   - First image eager + high fetchpriority (above the fold).
  *   - Remaining images lazy with async decoding.
  */
+import { withSize, buildSrcset } from '../utils/image';
+
 const { images = [], alt = 'Project' } = Astro.props;
 const hasImages = images.length > 0;
-
-/* Append/replace ?format=Nw on a Squarespace CDN URL. Falls back gracefully
-   for non-Squarespace URLs by appending the param if URL parses cleanly. */
-function withSize(src: string, width: number): string {
-  try {
-    const url = new URL(src);
-    url.searchParams.set('format', `${width}w`);
-    return url.toString();
-  } catch {
-    return src;
-  }
-}
-
-/* Generate a srcset string covering the common viewport widths × DPRs.
-   Browser picks the best candidate based on the `sizes` attribute. */
-function buildSrcset(src: string): string {
-  return [500, 750, 1100, 1500, 2500]
-    .map(w => `${withSize(src, w)} ${w}w`)
-    .join(', ');
-}
 
 /* Index-based: first image, plus every 5th after, span the full width.
    Matches the CSS grid rule below — kept here to drive the sizes attr. */
