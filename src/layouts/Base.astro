@@ -17,7 +17,7 @@ const {
 } = Astro.props;
 
 /* Build absolute OG image URL so social previews always resolve */
-const siteBase = 'https://sean-morse-v3.pages.dev';
+const siteBase = 'https://sean-morse-design.pages.dev';
 const absoluteOgImage = ogImage.startsWith('http') ? ogImage : siteBase + ogImage;
 const canonicalUrl = siteBase + Astro.url.pathname;
 ---

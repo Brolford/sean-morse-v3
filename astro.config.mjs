@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://sean-morse-v3.pages.dev',
+  site: 'https://sean-morse-design.pages.dev',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],

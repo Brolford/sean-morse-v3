@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "astro build && npx wrangler pages deploy dist --project-name=sean-morse-v3 --branch=main --commit-dirty=true",
+    "deploy": "astro build && npx wrangler pages deploy dist --project-name=sean-morse-design --branch=main --commit-dirty=true",
     "astro": "astro"
   },
   "dependencies": {

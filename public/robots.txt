@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sean-morse-v3.pages.dev/sitemap-index.xml
+Sitemap: https://sean-morse-design.pages.dev/sitemap-index.xml
