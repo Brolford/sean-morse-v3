@@ -26,15 +26,8 @@ const currentPath = Astro.url.pathname;
   aria-label="Main navigation"
 >
   <div class="nav-inner">
-    <!--
-      Logo: single link with two stacked text variants.
-      Both spans are absolutely positioned so they crossfade in place
-      without any layout reflow during the pill morph.
-    -->
-    <a href="/" class="nav-logo-link" aria-label="Sean Morse — Home">
-      <span class="nav-logo-full" aria-hidden="false">Sean Morse</span>
-      <span class="nav-logo-short" aria-hidden="true">SM</span>
-    </a>
+    <!-- Logo: persistent full wordmark across all nav states -->
+    <a href="/" class="nav-logo-link" aria-label="Sean Morse — Home">Sean Morse</a>
 
     <!-- Desktop navigation links -->
     <div class="nav-links" role="list">
@@ -140,41 +133,17 @@ const currentPath = Astro.url.pathname;
     gap: var(--space-3);
   }
 
-  /* ── Logo container ──
-     Reserves a small fixed width (fits "SM"). The full "Sean Morse" span
-     overflows visually into the open nav space — no layout shift during morph.
-     Both spans are absolutely positioned and crossfade by opacity only. */
+  /* ── Logo: persistent wordmark, no morph ── */
   .nav-logo-link {
-    position: relative;
-    display: inline-block;
-    width: 32px;
-    height: 22px;
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 400;
+    line-height: 22px;
     color: var(--text-ink);
     text-decoration: none;
-    transition: color 300ms var(--ease-smooth);
-    flex-shrink: 0;
-  }
-
-  .nav-logo-full,
-  .nav-logo-short {
-    position: absolute;
-    left: 0;
-    top: 0;
     white-space: nowrap;
-    line-height: 22px;
-    transition: opacity 250ms var(--ease-smooth);
-    will-change: opacity;
-  }
-
-  .nav-logo-full {
-    opacity: 1;
-  }
-
-  .nav-logo-short {
-    opacity: 0;
+    flex-shrink: 0;
+    transition: color 300ms var(--ease-smooth);
   }
 
   /* ── Desktop links — pushed to right edge ── */
@@ -232,14 +201,6 @@ const currentPath = Astro.url.pathname;
     padding: 10px 24px;
   }
 
-  /* Crossfade in place — no layout change, opacity only */
-  .nav-floating:global(.nav-scrolled) .nav-logo-full {
-    opacity: 0;
-  }
-
-  .nav-floating:global(.nav-scrolled) .nav-logo-short {
-    opacity: 1;
-  }
 
   /* ==========================================================================
      State 3 — .nav-dark: Dark Frosted Pill
@@ -448,14 +409,6 @@ const currentPath = Astro.url.pathname;
       padding: 10px 16px;
     }
 
-    /* Keep full logo visible on scroll, hide initials (no pill morph on mobile) */
-    .nav-floating:global(.nav-scrolled) .nav-logo-full {
-      opacity: 1;
-    }
-
-    .nav-floating:global(.nav-scrolled) .nav-logo-short {
-      opacity: 0;
-    }
   }
 
   /* ==========================================================================
